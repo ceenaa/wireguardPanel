@@ -12,7 +12,7 @@ import routes from './routes';
 function App() {
 	const router = useRoutes(routes);
 	// jsx
-	return <div className='bg-emerald-950 h-screen'>{router}</div>;
+	return <div className='bg-slate-950 h-screen font-Vazir'>{router}</div>;
 }
 
 // exports
