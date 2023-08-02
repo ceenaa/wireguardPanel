@@ -5,7 +5,8 @@ import { Link } from 'react-router-dom';
 // packages
 import { FaUserAlt, FaLock } from 'react-icons/fa';
 import { useForm } from 'react-hook-form';
-import { userLogin } from '../../services/Axios/Requests/userLogin';
+import { userLogin } from '../../services/Axios/Requests/user/userLogin';
+import axios from 'axios';
 
 // login
 function Login() {
@@ -29,7 +30,7 @@ function Login() {
 						className="flex flex-col items-center justify-center gap-y-20"
 						onSubmit={handleSubmit((data) => {
 							setIsDisable(true);
-							console.log(data);
+              
 							userLogin(data);
 						})}
 					>
@@ -68,7 +69,9 @@ function Login() {
 							type="submit"
 							disabled={isDisable}
 							className={`h-[70px] w-[250px] rounded-3xl bg-slate-700 text-4xl font-bold tracking-tight text-slate-300 transition-all delay-100 hover:bg-slate-700/75 hover:shadow-box hover:shadow-slate-700/25 ${
-								isDisable ? 'bg-yellow-700 hover:bg-yellow-700 hover:shadow-none animate-bounce' : null
+								isDisable
+									? 'animate-bounce bg-yellow-700 hover:bg-yellow-700 hover:shadow-none'
+									: null
 							}`}
 						>
 							{!isDisable ? 'Login' : 'Loading ⏳'}
