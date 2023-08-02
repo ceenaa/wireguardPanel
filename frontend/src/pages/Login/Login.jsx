@@ -1,21 +1,25 @@
 // react
-import React from 'react';
+import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 
 // packages
 import { FaUserAlt, FaLock } from 'react-icons/fa';
 import { useForm } from 'react-hook-form';
+import { userLogin } from '../../services/Axios/Requests/userLogin';
 
 // login
 function Login() {
 	// form handler
 	const { register, handleSubmit } = useForm();
 
+	// set submit button disabled
+	const [isDisable, setIsDisable] = useState(false);
+
 	// jsx
 	return (
 		<div className="flex h-screen items-center justify-center">
 			{/* container */}
-			<div className="flex h-auto shadow-box2 w-[700px] flex-col items-center justify-between gap-y-[100px] rounded-3xl bg-slate-900 p-5">
+			<div className="flex h-auto w-[700px] flex-col items-center justify-between gap-y-[100px] rounded-3xl bg-slate-900 p-5 shadow-box2">
 				{/* title */}
 				<header className="font-Lalezar text-5xl text-slate-300">WireGuard Panel</header>
 				{/* inputs */}
@@ -23,7 +27,11 @@ function Login() {
 					{/* form */}
 					<form
 						className="flex flex-col items-center justify-center gap-y-20"
-						onSubmit={handleSubmit((data) => console.log(data))}
+						onSubmit={handleSubmit((data) => {
+							setIsDisable(true);
+							console.log(data);
+							userLogin(data);
+						})}
 					>
 						{/* username */}
 						<div className="flex gap-x-4">
@@ -58,9 +66,12 @@ function Login() {
 						{/* submit button  */}
 						<button
 							type="submit"
-							className="h-[70px] w-[250px] rounded-3xl bg-slate-700 text-4xl font-bold tracking-tight text-slate-300 transition-all delay-100 hover:bg-slate-700/75 hover:shadow-box hover:shadow-slate-700/25"
+							disabled={isDisable}
+							className={`h-[70px] w-[250px] rounded-3xl bg-slate-700 text-4xl font-bold tracking-tight text-slate-300 transition-all delay-100 hover:bg-slate-700/75 hover:shadow-box hover:shadow-slate-700/25 ${
+								isDisable ? 'bg-yellow-700 hover:bg-yellow-700 hover:shadow-none animate-bounce' : null
+							}`}
 						>
-							Login
+							{!isDisable ? 'Login' : 'Loading ⏳'}
 						</button>
 					</form>
 				</main>
