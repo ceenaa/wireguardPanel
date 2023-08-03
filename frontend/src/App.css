@@ -1,0 +1,18 @@
+@import 'reset.css';
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+	@font-face {
+		font-family: 'Vazir';
+		src: url('./Fonts/Vazir/Vazirmatn-Regular.ttf') format('ttf');
+		font-display: swap;
+	}
+
+	@font-face {
+		font-family: 'Lalezar';
+		src: url(./Fonts/Lalezar-Font/OTF/Lalezar-Regular.otf) format('otf');
+	}
+}
