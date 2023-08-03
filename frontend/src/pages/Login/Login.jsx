@@ -1,20 +1,26 @@
 // react
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
+
+// styles
+import 'react-toastify/dist/ReactToastify.css';
 
 // packages
 import { FaUserAlt, FaLock } from 'react-icons/fa';
 import { useForm } from 'react-hook-form';
+import { ToastContainer, toast } from 'react-toastify';
 import { userLogin } from '../../services/Axios/Requests/user/userLogin';
-import axios from 'axios';
 
 // login
 function Login() {
 	// form handler
-	const { register, handleSubmit } = useForm();
+	const { register, handleSubmit, reset } = useForm();
 
 	// set submit button disabled
 	const [isDisable, setIsDisable] = useState(false);
+
+	// navigator
+	const navigate = useNavigate();
 
 	// jsx
 	return (
@@ -30,8 +36,40 @@ function Login() {
 						className="flex flex-col items-center justify-center gap-y-20"
 						onSubmit={handleSubmit((data) => {
 							setIsDisable(true);
-              
-							userLogin(data);
+
+							userLogin(data)
+								.then(() => {
+									toast.success('Login Successful ✅', {
+										position: 'bottom-right',
+										autoClose: 5000,
+										hideProgressBar: false,
+										closeOnClick: true,
+										pauseOnHover: true,
+										draggable: true,
+										progress: undefined,
+										theme: 'dark',
+										progressStyle: { backgroundColor: '#0ea5e9' },
+										onClose: () => {
+											navigate('/panel');
+										}
+									});
+								})
+								.catch(() =>
+									toast.error('Incorrect Information ❌', {
+										position: 'bottom-right',
+										autoClose: 5000,
+										hideProgressBar: false,
+										closeOnClick: true,
+										pauseOnHover: true,
+										draggable: true,
+										progress: undefined,
+										onClose: () => {
+											setIsDisable(false);
+
+											reset();
+										}
+									})
+								);
 						})}
 					>
 						{/* username */}
@@ -106,6 +144,19 @@ function Login() {
 					</Link>
 				</footer>
 			</div>
+			<ToastContainer
+				position="bottom-right"
+				autoClose={4000}
+				hideProgressBar={false}
+				newestOnTop
+				closeOnClick={false}
+				rtl={false}
+				pauseOnFocusLoss
+				draggable={false}
+				pauseOnHover
+				theme="dark"
+				toastStyle={{ backgroundColor: '#111827' }}
+			/>
 		</div>
 	);
 }
