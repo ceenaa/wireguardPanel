@@ -9,10 +9,13 @@ import 'react-toastify/dist/ReactToastify.css';
 import { FaUserAlt, FaLock } from 'react-icons/fa';
 import { useForm } from 'react-hook-form';
 import { ToastContainer, toast } from 'react-toastify';
+
+// components
 import { userLogin } from '../../services/Axios/Requests/user/userLogin';
 
 // login
 function Login() {
+  document.title = 'Wireguard Panel - Login'
 	// form handler
 	const { register, handleSubmit, reset } = useForm();
 
@@ -39,6 +42,7 @@ function Login() {
 
 							userLogin(data)
 								.then(() => {
+									// show success toast
 									toast.success('Login Successful ✅', {
 										position: 'bottom-right',
 										autoClose: 5000,
@@ -49,12 +53,23 @@ function Login() {
 										progress: undefined,
 										theme: 'dark',
 										progressStyle: { backgroundColor: '#0ea5e9' },
+										onOpen: () => {
+											setTimeout(() => {
+												// navigate to panel
+												navigate('/panel');
+											}, 2500);
+										},
 										onClose: () => {
-											navigate('/panel');
+											// enabling submit button
+											setIsDisable(false);
+
+											// reset form values
+											reset();
 										}
 									});
 								})
 								.catch(() =>
+									// show error toast
 									toast.error('Incorrect Information ❌', {
 										position: 'bottom-right',
 										autoClose: 5000,
@@ -64,8 +79,10 @@ function Login() {
 										draggable: true,
 										progress: undefined,
 										onClose: () => {
+											// enabling submit button
 											setIsDisable(false);
 
+                      // reset form values
 											reset();
 										}
 									})
