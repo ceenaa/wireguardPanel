@@ -15,7 +15,7 @@ import { userLogin } from '../../services/Axios/Requests/user/userLogin';
 
 // login
 function Login() {
-  document.title = 'Wireguard Panel - Login'
+	document.title = 'Wireguard Panel - Login';
 	// form handler
 	const { register, handleSubmit, reset } = useForm();
 
@@ -82,7 +82,7 @@ function Login() {
 											// enabling submit button
 											setIsDisable(false);
 
-                      // reset form values
+											// reset form values
 											reset();
 										}
 									})
@@ -161,6 +161,7 @@ function Login() {
 					</Link>
 				</footer>
 			</div>
+			{/* react toastify container */}
 			<ToastContainer
 				position="bottom-right"
 				autoClose={4000}
