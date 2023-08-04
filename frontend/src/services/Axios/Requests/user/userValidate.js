@@ -1,5 +1,5 @@
 // axios
-import axiosInstance from '../../configs/configs';
+import axiosInstance from '../../Configs/configs';
 
 // GET user validate
 const userValidate = async () =>

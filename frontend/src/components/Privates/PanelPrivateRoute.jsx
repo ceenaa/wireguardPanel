@@ -2,7 +2,7 @@
 import React, { useEffect, useState } from 'react';
 
 // components
-import { userValidate } from '../../services/Axios/Requests/user/userValidate';
+import { userValidate } from '../../services/Axios/Requests/User/userValidate';
 import { useNavigate } from 'react-router-dom';
 
 // panel private route
@@ -19,9 +19,9 @@ function PanelPrivateRoute({ children }) {
 				// set user validate to false when error
 				setUserValidate(false);
 
-        // navigate to login page
+				// navigate to login page
 				navigate('/login');
-			});
+			}, []);
 	});
 
 	// navigator

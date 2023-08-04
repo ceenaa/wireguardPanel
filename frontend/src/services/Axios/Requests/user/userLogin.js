@@ -1,5 +1,5 @@
 // axios
-import axiosInstance from '../../configs/configs';
+import axiosInstance from '../../Configs/configs';
 
 // POST user login
 const userLogin = async (userInfos) =>

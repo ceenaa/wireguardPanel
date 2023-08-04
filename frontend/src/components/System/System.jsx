@@ -1,5 +1,5 @@
 // react
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 // styles
@@ -11,11 +11,26 @@ import { ToastContainer, toast } from 'react-toastify';
 
 // components
 import { userLogout } from '../../services/Axios/Requests/user/userLogout';
+import { systemInfos } from '../../services/Axios/Requests/System/systemName';
 
 // system
 function System() {
 	// navigator
 	const navigate = useNavigate();
+
+	// system name
+	const [systemName, setSystemName] = useState('');
+
+	// system created date
+	const [systemStartedDate, setSystemStartedDate] = useState('');
+
+	// mounting side effects
+	useEffect(() => {
+		systemInfos('my system').then((res) => {
+			setSystemName(res.data.Name);
+			setSystemStartedDate(res.data.StartedDate);
+		});
+	}, []);
 
 	// logout when clicking logout button
 	const logoutHandler = () => {
@@ -63,8 +78,10 @@ function System() {
 			<header className="flex items-center justify-between pt-10">
 				{/* system name */}
 				<div className="flex items-center gap-x-2">
-					<h1 className="font-Lalezar text-4xl text-slate-50">System Name</h1>
-					<span className="text-slate-200">- 0000/00/00</span>
+					<h1 className="font-Lalezar text-4xl text-slate-50">
+						{systemName ? systemName : systemName}
+					</h1>
+					<span className="text-slate-200">- {systemStartedDate ? systemStartedDate : '0000/00/00'}</span>
 				</div>
 				{/* logout button */}
 				<div
