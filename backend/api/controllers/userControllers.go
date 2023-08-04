@@ -1,6 +1,5 @@
 package controllers
 
-import "C"
 import (
 	"api/initializers"
 	"api/models"
