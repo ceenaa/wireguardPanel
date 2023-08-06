@@ -4,14 +4,7 @@ export default {
 	theme: {
 		extend: {
 			container: {
-				center: true,
-				screens: {
-					'2xl': '1280px',
-					xl: '1024px',
-					lg: '1024px',
-					md: '768px',
-					sm: '640px'
-				}
+				center: true
 			},
 			fontFamily: {
 				Vazir: 'Vazir',
@@ -19,7 +12,8 @@ export default {
 			},
 			boxShadow: {
 				box: '0 0 30px 8px rgba(167, 243, 208, 0.10)',
-				box2: '0 0 50px 8px rgb(15, 23, 42)'
+				box2: '0 0 50px 8px rgb(15, 23, 42)',
+				table: '0 0 0 2px'
 			}
 		}
 	},
