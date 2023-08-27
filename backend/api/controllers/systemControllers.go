@@ -4,6 +4,7 @@ import (
 	"api/initializers"
 	"api/models"
 	"api/wireguard"
+	"fmt"
 	"github.com/gin-gonic/gin"
 	"net/http"
 	"strconv"
@@ -69,6 +70,51 @@ func SystemShow(c *gin.Context) {
 
 	result.Peers = peersInfo
 	c.JSON(200, result)
+
+}
+
+func TestSystemShow(c *gin.Context) {
+	name := c.Param("name")
+	page := c.DefaultQuery("page", "1")
+	perPage := c.DefaultQuery("per_page", "10")
+	pageNum, err := strconv.Atoi(page)
+	if err != nil {
+		c.JSON(400, gin.H{"error": "Invalid page number"})
+		return
+	}
+	perPageNum, err := strconv.Atoi(perPage)
+	if err != nil {
+		c.JSON(400, gin.H{"error": "Invalid per page number"})
+		return
+	}
+	startIdx := (pageNum - 1) * perPageNum
+	endIdx := startIdx + perPageNum
+
+	fmt.Print(endIdx)
+
+	var system models.System
+	initializers.DB.Model(&models.System{}).Preload("Peers").Where("name = ?", name).First(&system)
+	if err != nil {
+		c.JSON(400, gin.H{"error": "Invalid system fetching"})
+		return
+	}
+	var systemInfo models.SystemInfo
+	systemInfo.Name = system.Name
+	systemInfo.StartedDate = system.StartedDate
+	systemInfo.TotalUsage = system.TotalUsage
+	selectedPeers := system.Peers
+	peersInfo := make([]models.PeerInfo, len(selectedPeers))
+	for i, peer := range selectedPeers {
+		peersInfo[i].Name = peer.Name
+		peersInfo[i].Usage = peer.Usage
+		peersInfo[i].DataLimit = peer.DataLimit
+		peersInfo[i].BuyDate = peer.BuyDate
+		peersInfo[i].ExpireDate = peer.ExpireDate
+		peersInfo[i].IsActive = peer.IsActive
+	}
+	systemInfo.Peers = peersInfo
+
+	c.JSON(200, systemInfo)
 
 }
 

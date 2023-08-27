@@ -25,6 +25,7 @@ func main() {
 	r.POST("system", middleware.RequireAuth, controllers.SystemCreate)
 	r.POST("system/:name/peer", middleware.RequireAuth, controllers.SystemCreatePeer)
 	r.GET("system/:name", middleware.RequireAuth, controllers.SystemShow)
+	r.GET("test/system/:name/", middleware.RequireAuth, controllers.TestSystemShow)
 	r.GET("system/:name/sort/usage", middleware.RequireAuth, controllers.SystemShowBasedOnUsage)
 
 	r.GET("peer/:name", middleware.RequireAuth, controllers.PeerShow)
