@@ -11,12 +11,22 @@ import (
 	"time"
 )
 
+type CreateUserRequest struct {
+	Username string `json:"username"`
+	Password string `json:"password"`
+}
+
+// @Summary Create a new user account
+// @Description Register a new user account with a username and password.
+// @Tags Authentication
+// @Accept json
+// @Produce json
+// @Param body body CreateUserRequest true "User credentials"
+// @Success 200 {string} string "User created"
+// @Router /signup [post]
 func SignUp(c *gin.Context) {
 	// GET the email/Pas off req body
-	var body struct {
-		Username string
-		Password string
-	}
+	var body CreateUserRequest
 
 	if c.Bind(&body) != nil {
 		c.JSON(400, gin.H{"error": "Fields to read body"})
@@ -47,12 +57,17 @@ func SignUp(c *gin.Context) {
 	c.JSON(200, gin.H{"message": "User created"})
 }
 
+// @Summary User login
+// @Description Log in a user with username and password.
+// @Tags Authentication
+// @Accept json
+// @Produce json
+// @Param body body CreateUserRequest true "User credentials"
+// @Success 200 {string} string "User logged in"
+// @Router /login [post]
 func Login(c *gin.Context) {
 	// Get the email and pass off req body
-	var body struct {
-		Username string
-		Password string
-	}
+	var body CreateUserRequest
 	if c.Bind(&body) != nil {
 		c.JSON(400, gin.H{"error": "Fields to read body"})
 		return
@@ -100,10 +115,22 @@ func Login(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{})
 }
 
+// @Summary User logout
+// @Description Log out the current user.
+// @Tags Authentication
+// @Produce json
+// @Success 200 {string} string "User logged out"
+// @Router /logout [post]
 func Logout(c *gin.Context) {
 	c.SetCookie("Authorization", "", -1, "/", "localhost", false, true)
 }
 
+// @Summary Validate user session
+// @Description Check if the user is logged in and the session is valid.
+// @Tags Authentication
+// @Produce json
+// @Success 200 {string} string "User is logged in"
+// @Router /validate [get]
 func Validate(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{
 		"message": "Im logged in",
