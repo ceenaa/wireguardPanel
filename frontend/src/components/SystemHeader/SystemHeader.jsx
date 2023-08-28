@@ -1,5 +1,5 @@
 // react
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 // styles
@@ -13,7 +13,7 @@ import { ToastContainer, toast } from 'react-toastify';
 import { userLogout } from '../../services/Axios/Requests/user/userLogout';
 
 // system
-function System({ systemName, systemStartedDate }) {
+function System({systemName, systemStartedDate}) {
 	// navigator
 	const navigate = useNavigate();
 

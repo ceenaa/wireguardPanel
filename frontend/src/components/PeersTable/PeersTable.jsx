@@ -8,11 +8,11 @@ import { BiChevronDown, BiChevronUp } from 'react-icons/bi';
 import PeersTableItem from '../PeersTableItem/PeersTableItem';
 
 // peers table
-function PeersTable() {
-  // filter
+function PeersTable({ peers }) {
+	// filter
 	const [currentFilter, setCurrentFilter] = useState('');
 
-  // filter handler
+	// filter handler
 	const filterHandler = (type) => {
 		if (currentFilter === type) setCurrentFilter(`reversed${type}`);
 		else setCurrentFilter(type);
@@ -62,13 +62,16 @@ function PeersTable() {
 				</tr>
 			</thead>
 			<tbody className="divide-y-2 divide-sky-700">
-				<PeersTableItem
-					peerName={'Mahdi Abdollahi'}
-					isActive={false}
-					remainingDays={23}
-					dataLimit={90}
-					remainingUsage={39}
-				/>
+				{peers.map((peer, index) => (
+					<PeersTableItem
+						key={index}
+						peerName={'Mahdi Abdollahi'}
+						isActive={false}
+						remainingDays={23}
+						dataLimit={90}
+						remainingUsage={39}
+					/>
+				))}
 			</tbody>
 		</table>
 	);

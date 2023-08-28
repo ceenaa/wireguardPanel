@@ -1,8 +1,9 @@
 // react
 import React, { useEffect, useState } from 'react';
 
-// axios
-import { systemInfos } from '../../services/Axios/Requests/System/systemName';
+// redux
+import { useDispatch, useSelector } from 'react-redux';
+import { getSystemInfosFromServer } from '../../services/Redux/Slices/System';
 
 // components
 import SystemHeader from '../../components/SystemHeader/SystemHeader';
@@ -10,50 +11,51 @@ import SystemDataUsage from '../../components/SystemDataUsage/SystemDataUsage';
 import SystemUsers from '../../components/SytemUsers/SystemUsers';
 import PeersTable from '../../components/PeersTable/PeersTable';
 import PeersHeader from '../../components/PeersHeader/PeersHeader';
-import NewPeer from '../../components/NewPeer/NewPeer';
 import { Outlet } from 'react-router-dom';
+import { getPeersFromServer } from '../../services/Redux/Slices/Peers';
 
 // panel
 function Panel() {
-	// system name
-	const [systemName, setSystemName] = useState('System Name');
-
-	// system started date
-	const [systemStartedDate, setSystemStartedDate] = useState('0000/00/00');
-
-	// system total usage
-	const [systemTotalUsage, setSystemTotalUsage] = useState('000.00');
-
 	// system active users
 	const [systemActiveUsers, setSystemActiveUsers] = useState('000');
 
 	// system active users
 	const [systemDeActiveUsers, setSystemDeActiveUsers] = useState('000');
 
+	// redux dispatch hook
+	const dispatch = useDispatch();
+
 	// mounting side effects
 	useEffect(() => {
 		// GET system infos
-		systemInfos('my system').then((res) => {
-			setSystemName(res.data.Name);
-			setSystemStartedDate(res.data.StartedDate);
-			setSystemTotalUsage(res.data.TotalUsage);
-		});
+		dispatch(getSystemInfosFromServer());
+		dispatch(getPeersFromServer());
 	}, []);
+
+	// system infos
+	let systemInfos = useSelector((state) => state.system);
+
+  // peers list
+	let peers = useSelector((state) => state.peers);
 
 	// jsx
 	return (
 		<>
 			<div className="container">
-				<SystemHeader systemName={systemName} systemStartedDate={systemStartedDate} />
+				<SystemHeader systemName={systemInfos.Name} systemStartedDate={systemInfos.StartedDate} />
 				<main>
 					<div className="mt-6 flex flex-wrap items-center justify-between lg:px-16">
-						<SystemDataUsage totalUsage={systemTotalUsage} title="Data Usage" />
+						<SystemDataUsage totalUsage={systemInfos.TotalUsage} title="Data Usage" />
 						<SystemUsers activeUsers={systemActiveUsers} deActiveUsers={systemDeActiveUsers} />
 					</div>
-					<PeersHeader />
-					<section className="my-10">
-						<PeersTable />
-					</section>
+					{systemInfos.Peers ? (
+						<>
+							<PeersHeader />
+							<section className="my-10">
+								<PeersTable peers={peers} />
+							</section>
+						</>
+					) : null}
 				</main>
 			</div>
 			<Outlet />
