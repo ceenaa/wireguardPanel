@@ -1,5 +1,6 @@
 // react
-import React, { useEffect, useState } from 'react';
+import React from 'react';
+import { useNavigate } from 'react-router-dom';
 
 // packages
 import { IoQrCodeSharp } from 'react-icons/io5';
@@ -7,11 +8,16 @@ import { BiLinkAlt } from 'react-icons/bi';
 import { MdWifi, MdWifiOff } from 'react-icons/md';
 
 function PeersTableItem({ peerName, isActive, remainingDays, remainingUsage, dataLimit }) {
+	const navigate = useNavigate();
+
 	// jsx
 	return (
 		<tr className="h-[114px] divide-x-2 divide-slate-300 text-center text-2xl leading-[114px]">
 			{/* User Name */}
-			<td className="cursor-pointer px-5 font-bold text-slate-50 shadow-blue-500 transition-all hover:text-blue-500 hover:shadow-box">
+			<td
+				className="cursor-pointer px-5 font-bold text-slate-50 shadow-blue-500 transition-all hover:text-blue-500 hover:shadow-box"
+				onClick={() => navigate('peer')}
+			>
 				<span>{peerName}</span>
 			</td>
 			{/* Status  */}

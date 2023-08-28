@@ -3,12 +3,15 @@ import React, { useEffect, useState } from 'react';
 
 // components
 import { userValidate } from '../../services/Axios/Requests/User/userValidate';
-import { useNavigate } from 'react-router-dom';
+import { Navigate, useNavigate } from 'react-router-dom';
 
 // panel private route
 function PanelPrivateRoute({ children }) {
 	// is user valid
 	const [isUserValidate, setUserValidate] = useState(false);
+
+	// navigator
+	const navigate = useNavigate();
 
 	// check user validate when mounting
 	useEffect(() => {
@@ -23,9 +26,6 @@ function PanelPrivateRoute({ children }) {
 				navigate('/login');
 			}, []);
 	});
-
-	// navigator
-	const navigate = useNavigate();
 
 	// jsx
 	return <>{isUserValidate ? <>{children}</> : navigate('/login')}</>;

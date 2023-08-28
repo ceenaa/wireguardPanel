@@ -4,9 +4,13 @@ import React from 'react';
 // packages
 import { LuRefreshCcw } from 'react-icons/lu';
 import { BiSearchAlt } from 'react-icons/bi';
+import { useNavigate } from 'react-router-dom';
 
 // peers header
 function PeersHeader() {
+  // navigator
+	const navigate = useNavigate();
+
 	return (
 		<section className="mt-[70px] flex items-center justify-between">
 			<div className="relative">
@@ -20,7 +24,10 @@ function PeersHeader() {
 			</div>
 			<div className="flex gap-x-10">
 				{/* create new user button */}
-				<button className="h-[50px] w-[200px] rounded-3xl bg-slate-900 font-Lalezar text-2xl text-slate-50 shadow-box2 transition-all hover:bg-slate-800 hover:shadow-box">
+				<button
+					className="h-[50px] w-[200px] rounded-3xl bg-slate-900 font-Lalezar text-2xl text-slate-50 shadow-box2 transition-all hover:bg-slate-800 hover:shadow-box"
+					onClick={() => navigate('new-peer')}
+				>
 					Create New User
 				</button>
 				{/* refresh button */}

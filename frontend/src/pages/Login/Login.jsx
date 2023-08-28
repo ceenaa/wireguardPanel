@@ -16,6 +16,7 @@ import { userLogin } from '../../services/Axios/Requests/User/userLogin';
 // login
 function Login() {
 	document.title = 'Wireguard Panel - Login';
+  
 	// form handler
 	const { register, handleSubmit, reset } = useForm();
 
@@ -56,7 +57,7 @@ function Login() {
 										onOpen: () => {
 											setTimeout(() => {
 												// navigate to panel
-												navigate('/panel');
+												navigate('/');
 											}, 2500);
 										},
 										onClose: () => {

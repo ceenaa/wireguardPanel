@@ -1,13 +1,17 @@
 // react
 import React, { useEffect, useState } from 'react';
 
+// axios
+import { systemInfos } from '../../services/Axios/Requests/System/systemName';
+
 // components
 import SystemHeader from '../../components/SystemHeader/SystemHeader';
 import SystemDataUsage from '../../components/SystemDataUsage/SystemDataUsage';
-import { systemInfos } from '../../services/Axios/Requests/System/systemName';
 import SystemUsers from '../../components/SytemUsers/SystemUsers';
-import PeersHeader from '../../components/PeersHeader/PeersHeader';
 import PeersTable from '../../components/PeersTable/PeersTable';
+import PeersHeader from '../../components/PeersHeader/PeersHeader';
+import NewPeer from '../../components/NewPeer/NewPeer';
+import { Outlet } from 'react-router-dom';
 
 // panel
 function Panel() {
@@ -38,19 +42,22 @@ function Panel() {
 
 	// jsx
 	return (
-		<div className="container">
-			<SystemHeader systemName={systemName} systemStartedDate={systemStartedDate} />
-			<main>
-				<div className="mt-6 flex flex-wrap items-center justify-between lg:px-16">
-					<SystemDataUsage totalUsage={systemTotalUsage} title="Data Usage" />
-					<SystemUsers activeUsers={systemActiveUsers} deActiveUsers={systemDeActiveUsers} />
-				</div>
-				<PeersHeader />
-				<section className="my-10">
-					<PeersTable />
-				</section>
-			</main>
-		</div>
+		<>
+			<div className="container">
+				<SystemHeader systemName={systemName} systemStartedDate={systemStartedDate} />
+				<main>
+					<div className="mt-6 flex flex-wrap items-center justify-between lg:px-16">
+						<SystemDataUsage totalUsage={systemTotalUsage} title="Data Usage" />
+						<SystemUsers activeUsers={systemActiveUsers} deActiveUsers={systemDeActiveUsers} />
+					</div>
+					<PeersHeader />
+					<section className="my-10">
+						<PeersTable />
+					</section>
+				</main>
+			</div>
+			<Outlet />
+		</>
 	);
 }
 
