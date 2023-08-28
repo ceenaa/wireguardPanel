@@ -1,0 +1,623 @@
+basePath: /
+definitions:
+  controllers.CreateUserRequest:
+    properties:
+      password:
+        type: string
+      username:
+        type: string
+    type: object
+  controllers.peerUpdateBody:
+    properties:
+      allowed_ip:
+        type: string
+      buy_date:
+        type: string
+      config_end_point:
+        type: string
+      data_limit:
+        type: number
+      email:
+        type: string
+      expire_date:
+        type: string
+      name:
+        type: string
+      phone:
+        type: string
+    type: object
+  controllers.systemCreateBody:
+    properties:
+      name:
+        type: string
+      startedDate:
+        type: string
+    required:
+    - name
+    type: object
+  controllers.systemCreatePeerBody:
+    properties:
+      allowed_ip:
+        type: string
+      buy_date:
+        type: string
+      config_end_point:
+        type: string
+      data_limit:
+        type: number
+      email:
+        type: string
+      expire_date:
+        type: string
+      name:
+        type: string
+      phone:
+        type: string
+    type: object
+  gin.H:
+    additionalProperties: {}
+    type: object
+  models.Peer:
+    properties:
+      allowed_ip:
+        type: string
+      buy_date:
+        type: string
+      config_end_point:
+        type: string
+      data_limit:
+        type: number
+      email:
+        type: string
+      end_point:
+        type: string
+      expire_date:
+        type: string
+      is_active:
+        type: boolean
+      last_handshake:
+        type: string
+      name:
+        type: string
+      phone:
+        type: string
+      usage:
+        type: number
+    type: object
+  models.PeerInfo:
+    properties:
+      buyDate:
+        type: string
+      dataLimit:
+        type: number
+      expireDate:
+        type: string
+      isActive:
+        type: boolean
+      name:
+        type: string
+      usage:
+        type: number
+    type: object
+  models.SystemInfo:
+    properties:
+      name:
+        type: string
+      peers:
+        items:
+          $ref: '#/definitions/models.PeerInfo'
+        type: array
+      startedDate:
+        type: string
+      totalUsage:
+        type: number
+    type: object
+host: localhost:8000
+info:
+  contact: {}
+  description: This is a Wireguard API server.
+  title: Wireguard API
+  version: "1.0"
+paths:
+  /login:
+    post:
+      consumes:
+      - application/json
+      description: Log in a user with username and password.
+      parameters:
+      - description: User credentials
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/controllers.CreateUserRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: User logged in
+          schema:
+            type: string
+      summary: User login
+      tags:
+      - Authentication
+  /logout:
+    post:
+      description: Log out the current user.
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: User logged out
+          schema:
+            type: string
+      summary: User logout
+      tags:
+      - Authentication
+  /peers/{name}:
+    delete:
+      description: Delete a peer by name.
+      parameters:
+      - description: Peer name
+        in: path
+        name: name
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Peer deleted
+          schema:
+            $ref: '#/definitions/gin.H'
+        "404":
+          description: Peer not found
+          schema:
+            $ref: '#/definitions/gin.H'
+      summary: Delete a peer
+      tags:
+      - Peers
+    get:
+      description: Retrieve information about a peer by name.
+      parameters:
+      - description: Peer name
+        in: path
+        name: name
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Peer information
+          schema:
+            $ref: '#/definitions/models.Peer'
+        "404":
+          description: Peer not found
+          schema:
+            $ref: '#/definitions/gin.H'
+      summary: Get information about a peer
+      tags:
+      - Peers
+    put:
+      consumes:
+      - application/json
+      description: Update a peer's information by name.
+      parameters:
+      - description: Peer name
+        in: path
+        name: name
+        required: true
+        type: string
+      - description: Updated peer information
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/controllers.peerUpdateBody'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Peer updated
+          schema:
+            $ref: '#/definitions/gin.H'
+        "400":
+          description: Fields cannot be empty
+          schema:
+            $ref: '#/definitions/gin.H'
+      summary: Update a peer's information
+      tags:
+      - Peers
+  /peers/{name}/pause:
+    post:
+      description: Pause a peer by name.
+      parameters:
+      - description: Peer name
+        in: path
+        name: name
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Peer paused
+          schema:
+            $ref: '#/definitions/gin.H'
+        "400":
+          description: Peer already paused" "Peer not found" "System not found
+          schema:
+            $ref: '#/definitions/gin.H'
+      summary: Pause a peer
+      tags:
+      - Peers
+  /peers/{name}/reset:
+    post:
+      description: Reset a peer's usage by name.
+      parameters:
+      - description: Peer name
+        in: path
+        name: name
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Peer usage reset
+          schema:
+            $ref: '#/definitions/gin.H'
+        "400":
+          description: Peer not found" "System not found
+          schema:
+            $ref: '#/definitions/gin.H'
+      summary: Reset a peer's usage
+      tags:
+      - Peers
+  /peers/{name}/resume:
+    post:
+      description: Resume a peer by name.
+      parameters:
+      - description: Peer name
+        in: path
+        name: name
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Peer resumed
+          schema:
+            $ref: '#/definitions/gin.H'
+        "400":
+          description: Peer already active" "Peer not found" "System not found
+          schema:
+            $ref: '#/definitions/gin.H'
+      summary: Resume a peer
+      tags:
+      - Peers
+  /signup:
+    post:
+      consumes:
+      - application/json
+      description: Register a new user account with a username and password.
+      parameters:
+      - description: User credentials
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/controllers.CreateUserRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: User created
+          schema:
+            type: string
+      summary: Create a new user account
+      tags:
+      - Authentication
+  /systems:
+    post:
+      consumes:
+      - application/json
+      description: Create a new system with the specified name.
+      parameters:
+      - description: System details
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/controllers.systemCreateBody'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: System created
+          schema:
+            $ref: '#/definitions/gin.H'
+        "400":
+          description: Fields to read body
+          schema:
+            $ref: '#/definitions/gin.H'
+      summary: Create a new system
+      tags:
+      - Systems
+  /systems/{name}:
+    get:
+      description: description for SystemShow.
+      parameters:
+      - description: System name
+        in: path
+        name: name
+        required: true
+        type: string
+      - default: 1
+        description: Page number
+        in: query
+        name: page
+        type: integer
+      - default: 10
+        description: Items per page
+        in: query
+        name: per_page
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: System information
+          schema:
+            $ref: '#/definitions/models.SystemInfo'
+        "400":
+          description: Invalid page number" "Invalid per page number" "Invalid system
+            fetching
+          schema:
+            $ref: '#/definitions/gin.H'
+      summary: System Show
+      tags:
+      - Systems
+  /systems/{name}/peers:
+    post:
+      consumes:
+      - application/json
+      description: Create a new peer for a system by name.
+      parameters:
+      - description: System name
+        in: path
+        name: name
+        required: true
+        type: string
+      - description: Peer details
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/controllers.systemCreatePeerBody'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Peer created
+          schema:
+            $ref: '#/definitions/gin.H'
+        "400":
+          description: Fields to read body
+          schema:
+            $ref: '#/definitions/gin.H'
+        "404":
+          description: System not found
+          schema:
+            $ref: '#/definitions/gin.H'
+      summary: Create a new peer for a system
+      tags:
+      - Systems
+  /systems/{name}/reload:
+    post:
+      description: Reload a system by name.
+      parameters:
+      - description: System name
+        in: path
+        name: name
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: System reloaded
+          schema:
+            $ref: '#/definitions/gin.H'
+        "404":
+          description: System not found
+          schema:
+            $ref: '#/definitions/gin.H'
+      summary: Reload a system
+      tags:
+      - Systems
+  /systems/{name}/usage:
+    get:
+      description: Retrieve systems based on usage, sorted by usage.
+      parameters:
+      - description: System name
+        in: path
+        name: name
+        required: true
+        type: string
+      - default: 1
+        description: Page number
+        in: query
+        name: page
+        type: integer
+      - default: 10
+        description: Items per page
+        in: query
+        name: per_page
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: System information
+          schema:
+            $ref: '#/definitions/models.SystemInfo'
+        "400":
+          description: Invalid page number" "Invalid per page number
+          schema:
+            $ref: '#/definitions/gin.H'
+        "404":
+          description: System not found
+          schema:
+            $ref: '#/definitions/gin.H'
+      summary: Get systems based on usage
+      tags:
+      - Systems
+  /test/peers/{name}/pause:
+    post:
+      description: Pause a peer by name.
+      parameters:
+      - description: Peer name
+        in: path
+        name: name
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Peer paused
+          schema:
+            $ref: '#/definitions/gin.H'
+        "400":
+          description: Peer already paused" "Peer not found" "System not found
+          schema:
+            $ref: '#/definitions/gin.H'
+      summary: Pause a peer
+      tags:
+      - Peers
+      - Test
+  /test/peers/{name}/reset:
+    post:
+      description: Reset a peer's usage by name.
+      parameters:
+      - description: Peer name
+        in: path
+        name: name
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Peer usage reset
+          schema:
+            $ref: '#/definitions/gin.H'
+        "400":
+          description: Peer not found" "System not found
+          schema:
+            $ref: '#/definitions/gin.H'
+      summary: Reset a peer's usage
+      tags:
+      - Peers
+      - Test
+  /test/peers/{name}/resume:
+    post:
+      description: Resume a peer by name.
+      parameters:
+      - description: Peer name
+        in: path
+        name: name
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Peer resumed
+          schema:
+            $ref: '#/definitions/gin.H'
+        "400":
+          description: Peer already active" "Peer not found" "System not found
+          schema:
+            $ref: '#/definitions/gin.H'
+      summary: Resume a peer
+      tags:
+      - Peers
+      - Test
+  /test/systems/{name}/peers:
+    post:
+      consumes:
+      - application/json
+      description: Create a new peer for a system by name.
+      parameters:
+      - description: System name
+        in: path
+        name: name
+        required: true
+        type: string
+      - description: Peer details
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/controllers.systemCreatePeerBody'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Peer created
+          schema:
+            $ref: '#/definitions/gin.H'
+        "400":
+          description: Fields to read body
+          schema:
+            $ref: '#/definitions/gin.H'
+        "404":
+          description: System not found
+          schema:
+            $ref: '#/definitions/gin.H'
+      summary: Create a new peer for a system
+      tags:
+      - Systems
+      - Test
+  /test/systems/{name}/reload:
+    post:
+      description: Reload a system by name.
+      parameters:
+      - description: System name
+        in: path
+        name: name
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: System reloaded
+          schema:
+            $ref: '#/definitions/gin.H'
+        "404":
+          description: System not found
+          schema:
+            $ref: '#/definitions/gin.H'
+      summary: Reload a system
+      tags:
+      - Test
+      - Systems
+  /validate:
+    get:
+      description: Check if the user is logged in and the session is valid.
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: User is logged in
+          schema:
+            type: string
+      summary: Validate user session
+      tags:
+      - Authentication
+swagger: "2.0"
