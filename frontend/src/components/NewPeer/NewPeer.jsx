@@ -54,7 +54,7 @@ function NewPeer() {
 		<>
 			<div className="absolute top-0 z-0 flex h-screen w-screen items-center justify-center backdrop-blur-sm">
 				<div className="absolute -z-0 h-full w-full" onClick={closeModalHandler}></div>
-				<div className="z-10 h-auto w-auto overflow-auto rounded-3xl bg-slate-800 p-10">
+				<div className="z-10 h-auto w-auto overflow-scroll rounded-3xl bg-slate-800 p-10">
 					<span className="block w-full select-none text-center font-Lalezar text-2xl text-slate-300">
 						Create New Peer
 					</span>

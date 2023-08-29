@@ -65,11 +65,13 @@ function PeersTable({ peers }) {
 				{peers.map((peer, index) => (
 					<PeersTableItem
 						key={index}
-						peerName={'Mahdi Abdollahi'}
-						isActive={false}
-						remainingDays={23}
-						dataLimit={90}
-						remainingUsage={39}
+						peerName={peer.Name}
+						isActive={peer.IsActive}
+						remainingDays={Math.ceil(
+							Math.abs(new Date() - new Date(peer.ExpireDate)) / 1000 / 60 / 60 / 24
+						)}
+						dataLimit={peer.DataLimit}
+						remainingUsage={peer.Usage}
 					/>
 				))}
 			</tbody>
