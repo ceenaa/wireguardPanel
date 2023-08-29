@@ -88,7 +88,7 @@ function NewPeer() {
 								})
 								.catch(() => {
 									// show error toast
-									toast.error('Incorrect Information ❌', {
+									toast.error('Create New Peer Failed ❌', {
 										position: 'bottom-right',
 										autoClose: 5000,
 										hideProgressBar: false,

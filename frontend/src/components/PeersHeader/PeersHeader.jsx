@@ -1,16 +1,27 @@
 // react
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
 
-// packages
+// icons
 import { LuRefreshCcw } from 'react-icons/lu';
 import { BiSearchAlt } from 'react-icons/bi';
-import { useNavigate } from 'react-router-dom';
+
+// redux
+import { useDispatch } from 'react-redux';
+
+// axios
+import { getPeersFromServer } from '../../services/Redux/Slices/Peers';
 
 // peers header
 function PeersHeader() {
-  // navigator
+	// navigator
 	const navigate = useNavigate();
 
+  // redux dispatch hook
+	const dispatch = useDispatch();
+
+	// refresh button handler
+	const refreshHandler = () => dispatch(getPeersFromServer());
 	return (
 		<section className="mt-[70px] flex items-center justify-between">
 			<div className="relative">
@@ -31,7 +42,10 @@ function PeersHeader() {
 					Create New User
 				</button>
 				{/* refresh button */}
-				<button className="flex h-[50px] w-[50px] items-center justify-center rounded-full bg-slate-700 transition-colors hover:bg-slate-600 hover:shadow-box">
+				<button
+					className="flex h-[50px] w-[50px] items-center justify-center rounded-full bg-slate-700 transition-colors hover:bg-slate-600 hover:shadow-box"
+					onClick={refreshHandler}
+				>
 					<LuRefreshCcw className="h-[30px] w-[30px] text-slate-300" />
 				</button>
 			</div>
