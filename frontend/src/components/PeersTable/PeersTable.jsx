@@ -67,7 +67,7 @@ function PeersTable({ peers }) {
 						key={index}
 						peerName={peer.Name}
 						isActive={peer.IsActive}
-						remainingDays={Math.ceil(
+						remainingDays={Math.floor(
 							Math.abs(new Date() - new Date(peer.ExpireDate)) / 1000 / 60 / 60 / 24
 						)}
 						dataLimit={peer.DataLimit}
