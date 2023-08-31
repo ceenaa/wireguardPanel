@@ -18,7 +18,7 @@ const routes = [
 		),
 		children: [
 			{ path: 'new-peer', element: <NewPeer /> },
-			{ path: 'peer', element: <PeerDetails /> }
+			{ path: 'peer/:peerName', element: <PeerDetails /> }
 		]
 	},
 	{ path: '/login', element: <Login /> }

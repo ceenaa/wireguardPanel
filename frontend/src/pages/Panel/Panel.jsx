@@ -12,7 +12,6 @@ import SystemUsers from '../../components/SytemUsers/SystemUsers';
 import PeersTable from '../../components/PeersTable/PeersTable';
 import PeersHeader from '../../components/PeersHeader/PeersHeader';
 import { Outlet } from 'react-router-dom';
-import { getPeersFromServer } from '../../services/Redux/Slices/Peers';
 
 // panel
 function Panel() {
@@ -29,14 +28,13 @@ function Panel() {
 	useEffect(() => {
 		// GET system infos
 		dispatch(getSystemInfosFromServer());
-		dispatch(getPeersFromServer());
 	}, []);
 
 	// system infos
 	let systemInfos = useSelector((state) => state.system);
 
   // peers list
-	let peers = useSelector((state) => state.peers);
+	let peers = useSelector((state) => state.system.Peers);
 
 	// jsx
 	return (

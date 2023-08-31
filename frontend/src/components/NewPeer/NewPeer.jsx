@@ -18,13 +18,13 @@ import { postNewPeer } from '../../services/Axios/Requests/System/createNewPeer'
 
 // redux
 import { useDispatch } from 'react-redux';
-import { getPeersFromServer } from '../../services/Redux/Slices/Peers';
+import { getSystemInfosFromServer } from '../../services/Redux/Slices/System';
 
 // react toastify
 import 'react-toastify/dist/ReactToastify.css';
 import { ToastContainer, toast } from 'react-toastify';
 
-// components
+// yup
 import { systemNewPeerSchema } from '../../services/Yup/newPeerAuth';
 
 // new peer
@@ -63,7 +63,7 @@ function NewPeer() {
 						onSubmit={handleSubmit((data) => {
 							postNewPeer(data)
 								.then(() => {
-									dispatch(getPeersFromServer());
+									dispatch(getSystemInfosFromServer());
 									// show success toast
 									toast.success('New Peer Created ✅', {
 										position: 'bottom-right',

@@ -16,7 +16,7 @@ function PeersTableItem({ peerName, isActive, remainingDays, remainingUsage, dat
 			{/* User Name */}
 			<td
 				className="cursor-pointer px-5 font-bold text-slate-50 shadow-blue-500 transition-all hover:text-blue-500 hover:shadow-box"
-				onClick={() => navigate('peer')}
+				onClick={() => navigate(`peer/${peerName}`)}
 			>
 				<span>{peerName}</span>
 			</td>
