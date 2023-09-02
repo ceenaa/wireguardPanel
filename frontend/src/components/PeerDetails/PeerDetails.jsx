@@ -124,6 +124,8 @@ function NewPeer() {
 	const updatePeer = () => {
 		const newPeerData = getValues();
 
+		newPeerData.data_limit = +newPeerData.data_limit;
+
 		putNewPeer(peerName, newPeerData)
 			.then(() => throwSuccessToast('Peer Updated Successfully'))
 			.catch(() => throwErrorToast('Peer Update Failed'));
