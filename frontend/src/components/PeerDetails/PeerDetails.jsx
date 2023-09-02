@@ -26,6 +26,8 @@ import { putNewPeer } from '../../services/Axios/Requests/peer/updatePeer';
 import 'react-toastify/dist/ReactToastify.css';
 import { ToastContainer, toast } from 'react-toastify';
 import { getSystemInfosFromServer } from '../../services/Redux/Slices/System';
+import { deletePeer } from '../../services/Axios/Requests/peer/deletePeer';
+import { postPausePeer } from '../../services/Axios/Requests/peer/pausePeer';
 
 // new peer
 function NewPeer() {
@@ -127,13 +129,15 @@ function NewPeer() {
 	};
 
 	// delete peer handler
-	const deletePeer = () => {
-		console.log('delete');
+	const deletePeerHandler = () => {
+		deletePeer(peerName)
+			.then(() => throwSuccessToast('Peer Deleted Successfully'))
+			.catch(() => throwErrorToast('Peer Delete Failed'));
 	};
 
 	// pause peer handler
 	const pausePeer = () => {
-		console.log('pause');
+		postPausePeer(peerName);
 	};
 
 	// resume peer handler
@@ -278,7 +282,7 @@ function NewPeer() {
 							<button
 								className="h-[50px] w-[100px] self-center rounded-3xl bg-red-500 pt-1 text-center font-Lalezar text-2xl transition-all hover:bg-red-600 hover:shadow-box"
 								type="submit"
-								onClick={deletePeer}
+								onClick={deletePeerHandler}
 							>
 								Delete
 							</button>
