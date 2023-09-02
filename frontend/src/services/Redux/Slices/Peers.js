@@ -1,9 +1,10 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
-import { getSystemInfos } from '../../Axios/Requests/System/systemInfos';
-import { postNewPeer } from '../../Axios/Requests/System/createNewPeer';
+import { getPeerDetails } from '../../Axios/Requests/peer/peerDetails';
 
 // GET system infos
-export const getPeersFromServer = createAsyncThunk('system/getPeersFromServer', getSystemInfos);
+export const getPeerFromServer = createAsyncThunk('peers/getPeerFromServer', async (peerName) =>
+	getPeerDetails(peerName)
+);
 
 // system slice
 const slice = createSlice({
@@ -11,7 +12,7 @@ const slice = createSlice({
 	initialState: [],
 	reducers: {},
 	extraReducers: (builder) => {
-		builder.addCase(getPeersFromServer.fulfilled, (state, action) => action.payload.data.Peers);
+		builder.addCase(getPeerFromServer.fulfilled, (state, action) => action.payload.data);
 	}
 });
 

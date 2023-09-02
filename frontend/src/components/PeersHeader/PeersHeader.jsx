@@ -10,9 +10,6 @@ import { BiSearchAlt } from 'react-icons/bi';
 import { useDispatch } from 'react-redux';
 import { getSystemInfosFromServer } from '../../services/Redux/Slices/System';
 
-// axios
-import { getPeersFromServer } from '../../services/Redux/Slices/Peers';
-
 // peers header
 function PeersHeader() {
 	// navigator
@@ -22,7 +19,7 @@ function PeersHeader() {
 	const dispatch = useDispatch();
 
 	// refresh button handler
-	const refreshHandler = () => dispatch(getPeersFromServer());
+	const refreshHandler = () => dispatch(getSystemInfosFromServer());
 
 	// automatic refresh system
 	setTimeout(() => dispatch(getSystemInfosFromServer()), 5 * 60 * 1000);
