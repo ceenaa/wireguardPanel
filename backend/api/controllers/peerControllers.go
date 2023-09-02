@@ -207,7 +207,7 @@ func PeerResume(c *gin.Context) {
 // @Produce json
 // @Success 200 {object} gin.H "Peer usage reset"
 // @Failure 400 {object} gin.H "Peer not found" "System not found"
-// @Router /peers/{name}/reset [post]
+// @Router /peers/{name}/reset [put]
 func PeerResetUsage(c *gin.Context) {
 	name := c.Param("name")
 	var peer models.Peer
@@ -316,7 +316,7 @@ func TestPeerResume(c *gin.Context) {
 // @Produce json
 // @Success 200 {object} gin.H "Peer usage reset"
 // @Failure 400 {object} gin.H "Peer not found" "System not found"
-// @Router /test/peers/{name}/reset [post]
+// @Router /test/peers/{name}/reset [put]
 func TestPeerResetUsage(c *gin.Context) {
 	name := c.Param("name")
 	var peer models.Peer
