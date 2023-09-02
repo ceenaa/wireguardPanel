@@ -51,7 +51,7 @@ const docTemplate = `{
             }
         },
         "/logout": {
-            "post": {
+            "get": {
                 "description": "Log out the current user.",
                 "produces": [
                     "application/json"
