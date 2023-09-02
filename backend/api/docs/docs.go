@@ -184,7 +184,7 @@ const docTemplate = `{
             }
         },
         "/peers/{name}/pause": {
-            "post": {
+            "put": {
                 "description": "Pause a peer by name.",
                 "produces": [
                     "application/json"
@@ -254,7 +254,7 @@ const docTemplate = `{
             }
         },
         "/peers/{name}/resume": {
-            "post": {
+            "put": {
                 "description": "Resume a peer by name.",
                 "produces": [
                     "application/json"
@@ -555,7 +555,7 @@ const docTemplate = `{
             }
         },
         "/test/peers/{name}/pause": {
-            "post": {
+            "put": {
                 "description": "Pause a peer by name.",
                 "produces": [
                     "application/json"
@@ -627,7 +627,7 @@ const docTemplate = `{
             }
         },
         "/test/peers/{name}/resume": {
-            "post": {
+            "put": {
                 "description": "Resume a peer by name.",
                 "produces": [
                     "application/json"
