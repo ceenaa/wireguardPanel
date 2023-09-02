@@ -278,9 +278,11 @@ func TestSystemCreatePeer(c *gin.Context) {
 		c.JSON(404, gin.H{"error": "System not found"})
 		return
 	}
-	publicKey := strconv.Itoa(rand.Int())
-	privateKey := strconv.Itoa(rand.Int())
-	psk := strconv.Itoa(rand.Int())
+	randomNumber := rand.Intn(100000)
+	publicKey := strconv.Itoa(randomNumber)
+	privateKey := strconv.Itoa(randomNumber + 1)
+	psk := strconv.Itoa(randomNumber + 2)
+
 	peer := models.Peer{
 		Name:           body.Name,
 		Phone:          body.Phone,
