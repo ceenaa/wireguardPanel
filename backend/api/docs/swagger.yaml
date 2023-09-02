@@ -253,7 +253,7 @@ paths:
       tags:
       - Peers
   /peers/{name}/reset:
-    post:
+    put:
       description: Reset a peer's usage by name.
       parameters:
       - description: Peer name
@@ -500,7 +500,7 @@ paths:
       - Peers
       - Test
   /test/peers/{name}/reset:
-    post:
+    put:
       description: Reset a peer's usage by name.
       parameters:
       - description: Peer name

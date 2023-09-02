@@ -40,7 +40,7 @@ func main() {
 	r.GET("systems/:name/sort/usage", middleware.RequireAuth, controllers.SystemShowBasedOnUsage)
 
 	r.GET("peers/:name", middleware.RequireAuth, controllers.PeerShow)
-	r.POST("peers/:name/reset", middleware.RequireAuth, controllers.PeerResetUsage)
+	r.PUT("peers/:name/reset", middleware.RequireAuth, controllers.PeerResetUsage)
 	r.PUT("peers/:name", middleware.RequireAuth, controllers.PeerUpdate)
 
 	r.DELETE("peers/:name", middleware.RequireAuth, controllers.PeerDelete)
@@ -52,7 +52,7 @@ func main() {
 	r.POST("/test/systems/:name/peers", middleware.RequireAuth, controllers.TestSystemCreatePeer)
 	r.PUT("/test/peers/:name/pause", middleware.RequireAuth, controllers.TestPeerPause)
 	r.PUT("/test/peers/:name/resume", middleware.RequireAuth, controllers.TestPeerResume)
-	r.POST("/test/peers/:name/reset", middleware.RequireAuth, controllers.TestPeerResetUsage)
+	r.PUT("/test/peers/:name/reset", middleware.RequireAuth, controllers.TestPeerResetUsage)
 
 	r.Run()
 }

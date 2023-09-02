@@ -219,7 +219,7 @@ const docTemplate = `{
             }
         },
         "/peers/{name}/reset": {
-            "post": {
+            "put": {
                 "description": "Reset a peer's usage by name.",
                 "produces": [
                     "application/json"
@@ -591,7 +591,7 @@ const docTemplate = `{
             }
         },
         "/test/peers/{name}/reset": {
-            "post": {
+            "put": {
                 "description": "Reset a peer's usage by name.",
                 "produces": [
                     "application/json"

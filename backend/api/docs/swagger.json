@@ -212,7 +212,7 @@
             }
         },
         "/peers/{name}/reset": {
-            "post": {
+            "put": {
                 "description": "Reset a peer's usage by name.",
                 "produces": [
                     "application/json"
@@ -584,7 +584,7 @@
             }
         },
         "/test/peers/{name}/reset": {
-            "post": {
+            "put": {
                 "description": "Reset a peer's usage by name.",
                 "produces": [
                     "application/json"
