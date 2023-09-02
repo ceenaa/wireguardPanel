@@ -1,5 +1,5 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
-import { getPeerDetails } from '../../Axios/Requests/peer/peerDetails';
+import { getPeerDetails } from '../../Axios/Requests/Peer/peerDetails';
 
 // GET system infos
 export const getPeerFromServer = createAsyncThunk('peers/getPeerFromServer', async (peerName) =>
