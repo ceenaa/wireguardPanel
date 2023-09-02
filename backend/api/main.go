@@ -30,7 +30,7 @@ func main() {
 
 	r.POST("/signup", controllers.SignUp)
 	r.POST("/login", controllers.Login)
-	r.GET("logout", middleware.RequireAuth, controllers.Logout)
+	r.GET("/logout", middleware.RequireAuth, controllers.Logout)
 	r.GET("/validate", middleware.RequireAuth, controllers.Validate)
 
 	r.POST("systems", middleware.RequireAuth, controllers.SystemCreate)

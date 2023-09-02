@@ -120,7 +120,7 @@ func Login(c *gin.Context) {
 // @Tags Authentication
 // @Produce json
 // @Success 200 {string} string "User logged out"
-// @Router /logout [post]
+// @Router /logout [get]
 func Logout(c *gin.Context) {
 	c.SetCookie("Authorization", "", -1, "/", "localhost", false, true)
 }
