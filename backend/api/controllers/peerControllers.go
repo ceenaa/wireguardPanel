@@ -126,7 +126,7 @@ func PeerDelete(c *gin.Context) {
 // @Produce json
 // @Success 200 {object} gin.H "Peer paused"
 // @Failure 400 {object} gin.H "Peer already paused" "Peer not found" "System not found"
-// @Router /peers/{name}/pause [post]
+// @Router /peers/{name}/pause [put]
 func PeerPause(c *gin.Context) {
 	name := c.Param("name")
 	var peer models.Peer
@@ -166,7 +166,7 @@ func PeerPause(c *gin.Context) {
 // @Produce json
 // @Success 200 {object} gin.H "Peer resumed"
 // @Failure 400 {object} gin.H "Peer already active" "Peer not found" "System not found"
-// @Router /peers/{name}/resume [post]
+// @Router /peers/{name}/resume [put]
 func PeerResume(c *gin.Context) {
 	name := c.Param("name")
 	var peer models.Peer
@@ -249,7 +249,7 @@ func PeerResetUsage(c *gin.Context) {
 // @Produce json
 // @Success 200 {object} gin.H "Peer paused"
 // @Failure 400 {object} gin.H "Peer already paused" "Peer not found" "System not found"
-// @Router /test/peers/{name}/pause [post]
+// @Router /test/peers/{name}/pause [put]
 func TestPeerPause(c *gin.Context) {
 	name := c.Param("name")
 	var peer models.Peer
@@ -282,7 +282,7 @@ func TestPeerPause(c *gin.Context) {
 // @Produce json
 // @Success 200 {object} gin.H "Peer resumed"
 // @Failure 400 {object} gin.H "Peer already active" "Peer not found" "System not found"
-// @Router /test/peers/{name}/resume [post]
+// @Router /test/peers/{name}/resume [put]
 func TestPeerResume(c *gin.Context) {
 	name := c.Param("name")
 	var peer models.Peer

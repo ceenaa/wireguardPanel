@@ -230,7 +230,7 @@ paths:
       tags:
       - Peers
   /peers/{name}/pause:
-    post:
+    put:
       description: Pause a peer by name.
       parameters:
       - description: Peer name
@@ -276,7 +276,7 @@ paths:
       tags:
       - Peers
   /peers/{name}/resume:
-    post:
+    put:
       description: Resume a peer by name.
       parameters:
       - description: Peer name
@@ -476,7 +476,7 @@ paths:
       tags:
       - Systems
   /test/peers/{name}/pause:
-    post:
+    put:
       description: Pause a peer by name.
       parameters:
       - description: Peer name
@@ -524,7 +524,7 @@ paths:
       - Peers
       - Test
   /test/peers/{name}/resume:
-    post:
+    put:
       description: Resume a peer by name.
       parameters:
       - description: Peer name

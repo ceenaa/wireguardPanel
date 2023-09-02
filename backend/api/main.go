@@ -44,14 +44,14 @@ func main() {
 	r.PUT("peers/:name", middleware.RequireAuth, controllers.PeerUpdate)
 
 	r.DELETE("peers/:name", middleware.RequireAuth, controllers.PeerDelete)
-	r.POST("peers/:name/pause", middleware.RequireAuth, controllers.PeerPause)
-	r.POST("peers/:name/resume", middleware.RequireAuth, controllers.PeerResume)
+	r.PUT("peers/:name/pause", middleware.RequireAuth, controllers.PeerPause)
+	r.PUT("peers/:name/resume", middleware.RequireAuth, controllers.PeerResume)
 	r.POST("systems/:name/reload", middleware.RequireAuth, controllers.SystemReload)
 
 	r.POST("/test/systems/:name/reload", middleware.RequireAuth, controllers.TestSystemReload)
 	r.POST("/test/systems/:name/peers", middleware.RequireAuth, controllers.TestSystemCreatePeer)
-	r.POST("/test/peers/:name/pause", middleware.RequireAuth, controllers.TestPeerPause)
-	r.POST("/test/peers/:name/resume", middleware.RequireAuth, controllers.TestPeerResume)
+	r.PUT("/test/peers/:name/pause", middleware.RequireAuth, controllers.TestPeerPause)
+	r.PUT("/test/peers/:name/resume", middleware.RequireAuth, controllers.TestPeerResume)
 	r.POST("/test/peers/:name/reset", middleware.RequireAuth, controllers.TestPeerResetUsage)
 
 	r.Run()
