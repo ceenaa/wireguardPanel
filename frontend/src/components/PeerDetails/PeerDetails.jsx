@@ -20,14 +20,15 @@ import { CgRename, CgCalendarDates } from 'react-icons/cg';
 // yup
 import { yupResolver } from '@hookform/resolvers/yup';
 import { systemNewPeerSchema } from '../../services/Yup/newPeerAuth';
-import { putNewPeer } from '../../services/Axios/Requests/peer/updatePeer';
+import { putNewPeer } from '../../services/Axios/Requests/Peer/updatePeer';
 
 // react toastify
 import 'react-toastify/dist/ReactToastify.css';
 import { ToastContainer, toast } from 'react-toastify';
 import { getSystemInfosFromServer } from '../../services/Redux/Slices/System';
-import { deletePeer } from '../../services/Axios/Requests/peer/deletePeer';
+import { deletePeer } from '../../services/Axios/Requests/Peer/deletePeer';
 import { postPausePeer } from '../../services/Axios/Requests/peer/pausePeer';
+import { postResumePeer } from '../../services/Axios/Requests/Peer/resumePeer';
 
 // new peer
 function NewPeer() {
@@ -137,12 +138,16 @@ function NewPeer() {
 
 	// pause peer handler
 	const pausePeer = () => {
-		postPausePeer(peerName);
+		postPausePeer(peerName)
+			.then(() => throwSuccessToast('Peer Paused Successfully'))
+			.catch(() => throwErrorToast('Peer Pause Failed'));
 	};
 
 	// resume peer handler
 	const resumePeer = () => {
-		console.log('resume');
+		postResumePeer(peerName)
+			.then(() => throwSuccessToast('Peer Resumed Successfully'))
+			.catch(() => throwErrorToast('Peer Resume Failed'));
 	};
 
 	// reset peer handler
