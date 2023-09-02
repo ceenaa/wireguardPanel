@@ -15,6 +15,7 @@ type Peer struct {
 	EndPoint       string  `json:"end_point"`
 	LastHandshake  string  `json:"last_handshake"`
 	Usage          float32 `json:"usage"`
+	LastUsage      float32 `gorm:"default:0" json:"-"`
 	DataLimit      float32 `gorm:"default:null" json:"data_limit"`
 	BuyDate        string  `json:"buy_date"`
 	ExpireDate     string  `gorm:"default:null" json:"expire_date"`

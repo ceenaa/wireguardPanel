@@ -155,7 +155,6 @@ func PeerPause(c *gin.Context) {
 		c.JSON(400, gin.H{"error": err.Error()})
 		return
 	}
-	initializers.DB.Model(&peer).Update("IsActive", false)
 	c.JSON(200, gin.H{"message": "Peer paused", "wireguard": message})
 }
 
@@ -196,7 +195,6 @@ func PeerResume(c *gin.Context) {
 		c.JSON(400, gin.H{"error": err.Error()})
 		return
 	}
-	initializers.DB.Model(&peer).Update("IsActive", true)
 	c.JSON(200, gin.H{"message": "Peer Resumed", "wireguard": message})
 
 }
@@ -235,6 +233,7 @@ func PeerResetUsage(c *gin.Context) {
 		return
 	}
 	initializers.DB.Where("name = ?", name).First(&peer)
+	peer.LastUsage = 0
 	peer.Usage = 0
 	initializers.DB.Save(&peer)
 

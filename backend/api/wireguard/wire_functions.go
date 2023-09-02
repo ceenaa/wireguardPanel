@@ -7,7 +7,6 @@ import (
 	"fmt"
 	"log"
 	"os/exec"
-	"sort"
 	"strconv"
 	"strings"
 	"time"
@@ -65,6 +64,12 @@ func GeneratePSK() string {
 }
 
 func PausePeer(systemName string, publicKey string, allowedIp string) (string, error) {
+	var peer models.Peer
+	initializers.DB.Where("public_key = ?", publicKey).First(&peer)
+	peer.IsActive = false
+	peer.LastUsage = peer.Usage
+	initializers.DB.Save(&peer)
+
 	cmd := exec.Command("wg", "set", systemName, "peer", publicKey, "remove")
 	output, err := cmd.Output()
 	if err != nil {
@@ -79,6 +84,12 @@ func PausePeer(systemName string, publicKey string, allowedIp string) (string, e
 }
 
 func ResumePeer(systemName string, publicKey string, allowedIp string, psk string) (string, error) {
+	var peer models.Peer
+	initializers.DB.Where("public_key = ?", publicKey).First(&peer)
+	peer.IsActive = true
+	peer.LastUsage = peer.Usage
+	initializers.DB.Save(&peer)
+
 	cmd := exec.Command("wg", "set", systemName, "peer", publicKey,
 		"allowed-ips", allowedIp, "preshared-key", "<(echo", psk+")")
 	output, err := cmd.Output()
@@ -92,9 +103,6 @@ func ResumePeer(systemName string, publicKey string, allowedIp string, psk strin
 	}
 	return string(output), nil
 }
-
-var SortedPeerBasedOnUsage []models.Peer
-var SortedPeerBasedOnExpireDate []models.Peer
 
 func ReloadSystem(sysName string) error {
 	cmd := exec.Command("wg", "show", sysName, "dump")
@@ -133,27 +141,15 @@ func ReloadSystem(sysName string) error {
 		var peer models.Peer
 		initializers.DB.Where("public_key = ?", publicKey).First(&peer)
 		peer.IsActive = true
-		peer.Usage = transfer
+		peer.Usage = peer.LastUsage + transfer
 		peer.LastHandshake = latestHandshake
 		peer.EndPoint = endPoint
 		peer.EndPoint = endPoint
 		peer.LastHandshake = latestHandshake
+		initializers.DB.Save(&peer)
 	}
 	initializers.DB.Model(&models.System{}).Where("name = ?", sysName).Update("total_usage", totalTransfer)
 
-	var system models.System
-	initializers.DB.Where("name = ?", sysName).Preload("Peer").First(&system)
-	SortedPeerBasedOnUsage = system.Peers
-	SortedPeerBasedOnExpireDate = system.Peers
-
-	sort.Slice(SortedPeerBasedOnUsage, func(i, j int) bool {
-		return SortedPeerBasedOnUsage[i].Usage < SortedPeerBasedOnUsage[j].Usage
-	})
-	sort.Slice(SortedPeerBasedOnExpireDate, func(i, j int) bool {
-		expireDateI, _ := time.Parse("2006-01-02", SortedPeerBasedOnExpireDate[i].ExpireDate)
-		expireDateJ, _ := time.Parse("2006-01-02", SortedPeerBasedOnExpireDate[j].ExpireDate)
-		return expireDateI.Before(expireDateJ)
-	})
 	return nil
 
 }

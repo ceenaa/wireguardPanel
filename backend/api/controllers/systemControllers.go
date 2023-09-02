@@ -4,8 +4,8 @@ import (
 	"api/initializers"
 	"api/models"
 	"api/wireguard"
-	"fmt"
 	"github.com/gin-gonic/gin"
+	"math/rand"
 	"net/http"
 	"strconv"
 )
@@ -67,23 +67,23 @@ func SystemShow(c *gin.Context) {
 		return
 	}
 	startIdx := (pageNum - 1) * perPageNum
-	endIdx := startIdx + perPageNum
-
-	fmt.Print(endIdx)
 
 	var system models.System
-	initializers.DB.Model(&models.System{}).Preload("Peers").Where("name = ?", name).First(&system)
-	if err != nil {
-		c.JSON(400, gin.H{"error": "Invalid system fetching"})
+	initializers.DB.Model(&models.System{}).Where("name = ?", name).First(&system)
+	if system.ID == 0 {
+		c.JSON(404, gin.H{"error": "System not found"})
 		return
 	}
 	var systemInfo models.SystemInfo
 	systemInfo.Name = system.Name
 	systemInfo.StartedDate = system.StartedDate
 	systemInfo.TotalUsage = system.TotalUsage
-	selectedPeers := system.Peers
-	peersInfo := make([]models.PeerInfo, len(selectedPeers))
-	for i, peer := range selectedPeers {
+
+	var peers []models.Peer
+	initializers.DB.Model(&models.Peer{}).Where("system_id = ?", system.ID).Offset(startIdx).Limit(perPageNum).Find(&peers)
+
+	peersInfo := make([]models.PeerInfo, len(peers))
+	for i, peer := range peers {
 		peersInfo[i].Name = peer.Name
 		peersInfo[i].Usage = peer.Usage
 		peersInfo[i].DataLimit = peer.DataLimit
@@ -124,24 +124,17 @@ func SystemShowBasedOnUsage(c *gin.Context) {
 		return
 	}
 	startIdx := (pageNum - 1) * perPageNum
-	endIdx := startIdx + perPageNum
-	if endIdx > len(wireguard.SortedPeerBasedOnUsage) {
-		endIdx = len(wireguard.SortedPeerBasedOnUsage)
-	}
 
-	var system models.System
-	initializers.DB.Where("name = ?", name).Preload("Peers").First(&system)
-	if system.ID == 0 {
+	var systemID int
+	initializers.DB.Model(&models.System{}).Where("name = ?", name).Select("id").First(&systemID)
+	if systemID == 0 {
 		c.JSON(404, gin.H{"error": "System not found"})
 		return
 	}
-	var result models.SystemInfo
-	result.Name = system.Name
-	result.StartedDate = system.StartedDate
-	result.TotalUsage = system.TotalUsage
-	selectedPeers := wireguard.SortedPeerBasedOnUsage[startIdx:endIdx]
-	peersInfo := make([]models.PeerInfo, len(selectedPeers))
-	for i, peer := range selectedPeers {
+	var peers []models.Peer
+	initializers.DB.Model(&models.Peer{}).Where("system_id = ?", systemID).Order("usage desc").Offset(startIdx).Limit(perPageNum).Find(&peers)
+	peersInfo := make([]models.PeerInfo, len(peers))
+	for i, peer := range peers {
 		peersInfo[i].Name = peer.Name
 		peersInfo[i].Usage = peer.Usage
 		peersInfo[i].DataLimit = peer.DataLimit
@@ -150,8 +143,7 @@ func SystemShowBasedOnUsage(c *gin.Context) {
 		peersInfo[i].IsActive = peer.IsActive
 	}
 
-	result.Peers = peersInfo
-	c.JSON(200, result)
+	c.JSON(200, peersInfo)
 }
 
 type systemCreatePeerBody struct {
@@ -286,8 +278,9 @@ func TestSystemCreatePeer(c *gin.Context) {
 		c.JSON(404, gin.H{"error": "System not found"})
 		return
 	}
-	publicKey, privateKey := "sample_Data", "sample_Data"
-	psk := "sample_Data"
+	publicKey := strconv.Itoa(rand.Int())
+	privateKey := strconv.Itoa(rand.Int())
+	psk := strconv.Itoa(rand.Int())
 	peer := models.Peer{
 		Name:           body.Name,
 		Phone:          body.Phone,
