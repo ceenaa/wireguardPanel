@@ -27,7 +27,7 @@ import 'react-toastify/dist/ReactToastify.css';
 import { ToastContainer, toast } from 'react-toastify';
 import { getSystemInfosFromServer } from '../../services/Redux/Slices/System';
 import { deletePeer } from '../../services/Axios/Requests/Peer/deletePeer';
-import { postPausePeer } from '../../services/Axios/Requests/peer/pausePeer';
+import { postPausePeer } from '../../services/Axios/Requests/Peer/pausePeer';
 import { postResumePeer } from '../../services/Axios/Requests/Peer/resumePeer';
 
 // new peer

@@ -4,6 +4,7 @@ import (
 	"api/initializers"
 	"api/models"
 	"api/wireguard"
+	"fmt"
 	"github.com/gin-gonic/gin"
 )
 
@@ -114,7 +115,7 @@ func PeerDelete(c *gin.Context) {
 			return
 		}
 	}
-	initializers.DB.Delete(&peer)
+	initializers.DB.Unscoped().Delete(&peer)
 	c.JSON(200, gin.H{"message": "Peer deleted", "wireguard": message})
 }
 
@@ -238,6 +239,45 @@ func PeerResetUsage(c *gin.Context) {
 	initializers.DB.Save(&peer)
 
 	c.JSON(200, gin.H{"message": "Peer usage reset", "wireguard": message})
+}
+
+func PeerShowConfig(c *gin.Context) {
+	name := c.Param("name")
+	var peer models.Peer
+	initializers.DB.Where("name = ?", name).First(&peer)
+	if peer.ID == 0 {
+		c.JSON(404, gin.H{"error": "Peer not found"})
+		return
+	}
+	var system models.System
+	initializers.DB.Where("id = ?", peer.SystemID).First(&system)
+	if system.ID == 0 {
+		c.JSON(404, gin.H{"error": "System not found"})
+		return
+	}
+	file := fmt.Sprintf("../../configs/%s/%s.conf", system.Name, name)
+	c.Header("Content-Type", "txt/plain")
+
+	c.File(file)
+}
+
+func PeerShowQR(c *gin.Context) {
+	name := c.Param("name")
+	var peer models.Peer
+	initializers.DB.Where("name = ?", name).First(&peer)
+	if peer.ID == 0 {
+		c.JSON(404, gin.H{"error": "Peer not found"})
+		return
+	}
+	var system models.System
+	initializers.DB.Where("id = ?", peer.SystemID).First(&system)
+	if system.ID == 0 {
+		c.JSON(404, gin.H{"error": "System not found"})
+		return
+	}
+	file := fmt.Sprintf("../../configs/%s/%s.png", system.Name, name)
+	c.Header("Content-Type", "image/png")
+	c.File(file)
 }
 
 // TestPeerPause godoc

@@ -6,6 +6,7 @@ import (
 	"bytes"
 	"fmt"
 	"log"
+	"os"
 	"os/exec"
 	"strconv"
 	"strings"
@@ -151,5 +152,35 @@ func ReloadSystem(sysName string) error {
 	initializers.DB.Model(&models.System{}).Where("name = ?", sysName).Update("total_usage", totalTransfer)
 
 	return nil
+
+}
+
+func GenerateConfigFiles(name string, systemName string, serverPublicKey string, privateKey string, preSharedKey string, address string, endPoint string) {
+	file, err := os.Create("../../configs/" + systemName + "/" + name + ".conf")
+	if err != nil {
+		log.Fatal("Cannot create file", err)
+	}
+	file.WriteString("[Interface]\n")
+	dns := "1.1.1.1, 8.8.8.8"
+	mtu := "1280"
+	allowedIPs := "0.0.0.0/0, ::/0"
+	file.WriteString("Address = " + address + "\n")
+	file.WriteString("PrivateKey = " + privateKey + "\n")
+	file.WriteString("DNS = " + dns + "\n")
+	file.WriteString("MTU = " + mtu + "\n")
+	file.WriteString("\n")
+	file.WriteString("[Peer]\n")
+	file.WriteString("PublicKey = " + serverPublicKey + "\n")
+	file.WriteString("Endpoint = " + endPoint + "\n")
+	file.WriteString("AllowedIPs = " + allowedIPs + "\n")
+	file.WriteString("PresharedKey = " + preSharedKey + "\n")
+	file.Close()
+
+	cmd := exec.Command("qrencode", "-t", "png", "-o", fmt.Sprintf("../../configs/%s/%s.png", systemName, name), "-r", fmt.Sprintf("../../configs/%s/%s.conf", systemName, name))
+	// Run the command
+	err = cmd.Run()
+	if err != nil {
+		fmt.Printf("Error executing command: %v\n", err)
+	}
 
 }

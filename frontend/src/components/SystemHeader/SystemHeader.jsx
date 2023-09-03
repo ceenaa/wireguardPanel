@@ -10,7 +10,7 @@ import { BiLogOut } from 'react-icons/bi';
 import { ToastContainer, toast } from 'react-toastify';
 
 // components
-import { userLogout } from '../../services/Axios/Requests/user/userLogout';
+import { userLogout } from '../../services/Axios/Requests/User/userLogout';
 
 // system
 function System({systemName, systemStartedDate}) {

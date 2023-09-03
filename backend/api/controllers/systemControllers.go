@@ -203,6 +203,7 @@ func SystemCreatePeer(c *gin.Context) {
 		c.JSON(400, gin.H{"error": "Peer not created"})
 		return
 	}
+	wireguard.GenerateConfigFiles(peer.Name, system.Name, system.PublicKey, peer.PrivateKey, peer.PreSharedKey, peer.ConfigEndPoint, peer.AllowedIP)
 	c.JSON(200, gin.H{"message": "Peer created"})
 }
 
@@ -302,5 +303,6 @@ func TestSystemCreatePeer(c *gin.Context) {
 		c.JSON(400, gin.H{"error": "Peer not created"})
 		return
 	}
+	wireguard.GenerateConfigFiles(peer.Name, system.Name, system.PublicKey, peer.PrivateKey, peer.PreSharedKey, peer.ConfigEndPoint, peer.AllowedIP)
 	c.JSON(200, gin.H{"message": "Peer created"})
 }
