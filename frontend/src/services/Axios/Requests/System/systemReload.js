@@ -3,7 +3,7 @@ import axiosInstance from '../../Configs/configs';
 
 // POST new peer
 const postSystemReload = async () =>
-	axiosInstance.post(`/test/systems/MAHDI/reload`, {
+	axiosInstance.post(`/test/systems/wg0/reload`, {
 		withCredentials: true
 	});
 
