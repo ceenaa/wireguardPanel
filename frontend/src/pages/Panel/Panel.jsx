@@ -1,5 +1,5 @@
 // react
-import React, { useEffect, useState } from 'react';
+import React, { memo, useCallback, useEffect, useMemo, useState } from 'react';
 
 // redux
 import { useDispatch, useSelector } from 'react-redux';
@@ -15,12 +15,6 @@ import { Outlet } from 'react-router-dom';
 
 // panel
 function Panel() {
-	// system active users
-	const [systemActiveUsers, setSystemActiveUsers] = useState('000');
-
-	// system active users
-	const [systemDeActiveUsers, setSystemDeActiveUsers] = useState('000');
-
 	// redux dispatch hook
 	const dispatch = useDispatch();
 
@@ -33,7 +27,7 @@ function Panel() {
 	// system infos
 	let systemInfos = useSelector((state) => state.system);
 
-  // peers list
+	// peers list
 	let peers = useSelector((state) => state.system.Peers);
 
 	// jsx
@@ -44,7 +38,7 @@ function Panel() {
 				<main>
 					<div className="mt-6 flex flex-wrap items-center justify-between lg:px-16">
 						<SystemDataUsage totalUsage={systemInfos.TotalUsage} title="Data Usage" />
-						<SystemUsers activeUsers={systemActiveUsers} deActiveUsers={systemDeActiveUsers} />
+						<SystemUsers />
 					</div>
 					{systemInfos.Peers ? (
 						<>

@@ -1,5 +1,5 @@
 // react
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 
 // redux
@@ -29,14 +29,26 @@ import { getSystemInfosFromServer } from '../../services/Redux/Slices/System';
 import { deletePeer } from '../../services/Axios/Requests/Peer/deletePeer';
 import { postPausePeer } from '../../services/Axios/Requests/peer/pausePeer';
 import { postResumePeer } from '../../services/Axios/Requests/Peer/resumePeer';
+import { putResetPeer } from '../../services/Axios/Requests/Peer/resetPeer';
 
 // new peer
 function NewPeer() {
 	// navigator
 	const navigate = useNavigate();
 
+	// transition handler
+	const [isLoad, setIsLoad] = useState(false);
+
 	// close modal handler
-	const closeModalHandler = () => navigate('/');
+	const closeModalHandler = () => {
+		// transition handler
+		setIsLoad(!isLoad);
+
+		// navigate to panel
+		setTimeout(() => {
+			navigate('/');
+		}, 300);
+	};
 
 	// url params
 	const { peerName } = useParams();
@@ -89,7 +101,11 @@ function NewPeer() {
 
 	// mounting side effects
 	useEffect(() => {
+		// get peers
 		dispatch(getPeerFromServer(peerName));
+
+		// load transition
+		setIsLoad(true);
 	}, []);
 
 	// set default values for form
@@ -121,7 +137,7 @@ function NewPeer() {
 	});
 
 	// update peer handler
-	const updatePeer = () => {
+	const updatePeerHandler = () => {
 		const newPeerData = getValues();
 
 		newPeerData.data_limit = +newPeerData.data_limit;
@@ -139,28 +155,34 @@ function NewPeer() {
 	};
 
 	// pause peer handler
-	const pausePeer = () => {
+	const pausePeerHandler = () => {
 		postPausePeer(peerName)
 			.then(() => throwSuccessToast('Peer Paused Successfully'))
 			.catch(() => throwErrorToast('Peer Pause Failed'));
 	};
 
 	// resume peer handler
-	const resumePeer = () => {
+	const resumePeerHandler = () => {
 		postResumePeer(peerName)
 			.then(() => throwSuccessToast('Peer Resumed Successfully'))
 			.catch(() => throwErrorToast('Peer Resume Failed'));
 	};
 
 	// reset peer handler
-	const resetPeer = () => {
-		console.log('reset');
+	const resetPeerHandler = () => {
+		putResetPeer(peerName)
+			.then(() => throwSuccessToast('Peer Reset Successfully'))
+			.catch(() => throwErrorToast('Peer Reset Failed'));
 	};
 
 	// jsx
 	return (
 		<>
-			<div className="absolute top-0 z-0 flex h-screen w-screen items-center justify-center backdrop-blur-sm">
+			<div
+				className={`absolute top-0 z-0 flex h-screen w-screen items-center justify-center backdrop-blur-sm transition-opacity duration-300 ${
+					isLoad ? 'opacity-100' : 'opacity-0'
+				}`}
+			>
 				<div className="absolute -z-0 h-full w-full" onClick={closeModalHandler}></div>
 				<div className="z-10 h-auto w-auto rounded-3xl bg-slate-800 p-10">
 					<span className="block w-full select-none text-center font-Lalezar text-2xl text-slate-300">
@@ -278,11 +300,11 @@ function NewPeer() {
 							/>
 						</div>
 						{/* submit buttons */}
-						<div className="mt-5 flex items-center justify-between">
+						<div className="mt-5 flex items-center justify-evenly">
 							<button
 								className="h-[50px] w-[100px] self-center rounded-3xl bg-orange-500 pt-1 text-center font-Lalezar text-2xl transition-all hover:bg-orange-600 hover:shadow-box"
 								type="submit"
-								onClick={updatePeer}
+								onClick={updatePeerHandler}
 							>
 								Update
 							</button>
@@ -293,27 +315,32 @@ function NewPeer() {
 							>
 								Delete
 							</button>
-							<button
-								className="h-[50px] w-[100px] self-center rounded-3xl bg-sky-500 pt-1 text-center font-Lalezar text-2xl transition-all hover:bg-sky-600 hover:shadow-box"
-								type="submit"
-								onClick={pausePeer}
-							>
-								Pause
-							</button>
-							<button
-								className="h-[50px] w-[100px] self-center rounded-3xl bg-lime-500 pt-1 text-center font-Lalezar text-2xl transition-all hover:bg-lime-600 hover:shadow-box"
-								type="submit"
-								onClick={resumePeer}
-							>
-								Resume
-							</button>
-							<button
-								className="h-[50px] w-[100px] self-center rounded-3xl bg-teal-500 pt-1 text-center font-Lalezar text-2xl transition-all hover:bg-teal-600 hover:shadow-box"
-								type="submit"
-								onClick={resetPeer}
-							>
-								Reset
-							</button>
+							{peerDetails.is_active ? (
+								<button
+									className="h-[50px] w-[100px] self-center rounded-3xl bg-sky-500 pt-1 text-center font-Lalezar text-2xl transition-all hover:bg-sky-600 hover:shadow-box"
+									type="submit"
+									onClick={pausePeerHandler}
+								>
+									Pause
+								</button>
+							) : (
+								<button
+									className="h-[50px] w-[100px] self-center rounded-3xl bg-lime-500 pt-1 text-center font-Lalezar text-2xl transition-all hover:bg-lime-600 hover:shadow-box"
+									type="submit"
+									onClick={resumePeerHandler}
+								>
+									Resume
+								</button>
+							)}
+							{peerDetails.usage !== 0 ? (
+								<button
+									className="h-[50px] w-[100px] self-center rounded-3xl bg-teal-500 pt-1 text-center font-Lalezar text-2xl transition-all hover:bg-teal-600 hover:shadow-box"
+									type="submit"
+									onClick={resetPeerHandler}
+								>
+									Reset
+								</button>
+							) : null}
 						</div>
 					</form>
 				</div>

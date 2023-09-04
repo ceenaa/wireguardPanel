@@ -1,7 +1,7 @@
 // axios
 import axiosInstance from '../../Configs/configs';
 
-// get peer details
+// PUT new peer
 const putNewPeer = async (peerName, newPeerDetails) =>
 	axiosInstance.put(`/peers/${peerName}`, newPeerDetails, {
 		withCredentials: true

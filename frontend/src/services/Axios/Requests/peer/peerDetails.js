@@ -1,7 +1,7 @@
 // axios
 import axiosInstance from '../../Configs/configs';
 
-// get peer details
+// GET peer details
 const getPeerDetails = async (peerName) =>
 	axiosInstance.get(`/peers/${peerName}`, {
 		withCredentials: true

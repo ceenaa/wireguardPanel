@@ -1,11 +1,11 @@
 // react
 import React from 'react';
 
-// packages
+// icons
 import { HiShieldCheck } from 'react-icons/hi';
 
 // system infos
-function SystemUsers({ activeUsers, deActiveUsers }) {
+function SystemUsers() {
 	// jsx
 	return (
 		<section className="flex h-[90px] w-[400px] items-center justify-between rounded-3xl bg-slate-900 p-5 shadow-box">
@@ -16,9 +16,9 @@ function SystemUsers({ activeUsers, deActiveUsers }) {
 				<span className="font-Lalezar text-3xl text-slate-200">Users</span>
 			</div>
 			<div className="flex items-center justify-center gap-x-1.5">
-				<span className="text-3xl font-bold text-green-500">{activeUsers}</span>
+				<span className="text-3xl font-bold text-green-500">0</span>
 				<span className="text-xl text-slate-100">/</span>
-				<span className="text-xl text-red-500">{deActiveUsers}</span>
+				<span className="text-xl text-red-500">0</span>
 			</div>
 		</section>
 	);

@@ -1,5 +1,5 @@
 // react
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 // icons
@@ -35,8 +35,25 @@ function NewPeer() {
 	// redux dispatch hook
 	const dispatch = useDispatch();
 
+	// transition handler
+	const [isLoad, setIsLoad] = useState(false);
+
 	// close modal handler
-	const closeModalHandler = () => navigate('/');
+	const closeModalHandler = () => {
+		// transition handler
+		setIsLoad(!isLoad);
+
+		// navigate to panel
+		setTimeout(() => {
+			navigate('/');
+		}, 300);
+	};
+
+	// mounting side effects
+	useEffect(() => {
+		// load transition
+		setIsLoad(true);
+	}, []);
 
 	// form handler
 	const {
@@ -52,7 +69,11 @@ function NewPeer() {
 	// jsx
 	return (
 		<>
-			<div className="absolute top-0 z-0 flex h-screen w-screen items-center justify-center backdrop-blur-sm">
+			<div
+				className={`absolute top-0 z-0 flex h-screen w-screen items-center justify-center backdrop-blur-sm transition-opacity duration-300 ${
+					isLoad ? 'opacity-100' : 'opacity-0'
+				}`}
+			>
 				<div className="absolute -z-0 h-full w-full" onClick={closeModalHandler}></div>
 				<div className="z-10 h-auto w-auto overflow-scroll rounded-3xl bg-slate-800 p-10">
 					<span className="block w-full select-none text-center font-Lalezar text-2xl text-slate-300">

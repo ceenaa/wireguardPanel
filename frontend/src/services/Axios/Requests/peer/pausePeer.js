@@ -1,7 +1,7 @@
 // axios
 import axiosInstance from '../../Configs/configs';
 
-// GET user validate
+// PUT pause peer
 const postPausePeer = async (peerName) =>
 	axiosInstance.put(`/test/peers/${peerName}/pause`, '', {
 		withCredentials: true
