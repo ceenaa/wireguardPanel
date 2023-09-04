@@ -1,5 +1,5 @@
 // react
-import React, { useEffect } from 'react';
+import React from 'react';
 import { useNavigate } from 'react-router-dom';
 
 // styles
