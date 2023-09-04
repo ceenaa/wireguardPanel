@@ -229,6 +229,29 @@ paths:
       summary: Update a peer's information
       tags:
       - Peers
+  /peers/{name}/conf:
+    get:
+      description: Retrieve a peer's config by name.
+      parameters:
+      - description: Peer name
+        in: path
+        name: name
+        required: true
+        type: string
+      produces:
+      - text/plain
+      responses:
+        "200":
+          description: Peer config
+          schema:
+            type: string
+        "404":
+          description: Peer not found" "System not found
+          schema:
+            $ref: '#/definitions/gin.H'
+      summary: Get a peer's config
+      tags:
+      - Peers
   /peers/{name}/pause:
     put:
       description: Pause a peer by name.
@@ -250,6 +273,29 @@ paths:
           schema:
             $ref: '#/definitions/gin.H'
       summary: Pause a peer
+      tags:
+      - Peers
+  /peers/{name}/qr:
+    get:
+      description: Retrieve a peer's QR code by name.
+      parameters:
+      - description: Peer name
+        in: path
+        name: name
+        required: true
+        type: string
+      produces:
+      - image/png
+      responses:
+        "200":
+          description: Peer QR code
+          schema:
+            type: string
+        "404":
+          description: Peer not found" "System not found
+          schema:
+            $ref: '#/definitions/gin.H'
+      summary: Get a peer's QR code
       tags:
       - Peers
   /peers/{name}/reset:

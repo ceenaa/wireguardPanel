@@ -108,7 +108,7 @@ func ResumePeer(systemName string, publicKey string, allowedIp string, psk strin
 func ReloadSystem(sysName string) error {
 	cmd := exec.Command("wg", "show", sysName, "dump")
 	output, err := cmd.Output()
-	var totalTransfer = 0
+	var totalTransfer float32 = 0
 	if err != nil {
 		return err
 	}
@@ -136,15 +136,14 @@ func ReloadSystem(sysName string) error {
 		if err != nil {
 			return err
 		}
-		totalTransfer += holder1 + holder2
 		transfer := convertByteToGB(holder2 + holder1)
 
 		var peer models.Peer
 		initializers.DB.Where("public_key = ?", publicKey).First(&peer)
 		peer.IsActive = true
 		peer.Usage = peer.LastUsage + transfer
+		totalTransfer += peer.Usage
 		peer.LastHandshake = latestHandshake
-		peer.EndPoint = endPoint
 		peer.EndPoint = endPoint
 		peer.LastHandshake = latestHandshake
 		initializers.DB.Save(&peer)

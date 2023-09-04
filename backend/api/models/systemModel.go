@@ -12,8 +12,10 @@ type System struct {
 }
 
 type SystemInfo struct {
-	Name        string
-	StartedDate string
-	TotalUsage  float32
-	Peers       []PeerInfo
+	Name             string
+	StartedDate      string
+	TotalUsage       float32
+	Peers            []PeerInfo
+	AllPeersCount    int
+	ActivePeersCount int
 }

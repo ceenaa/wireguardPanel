@@ -81,7 +81,7 @@ func SystemShow(c *gin.Context) {
 
 	var peers []models.Peer
 	initializers.DB.Model(&models.Peer{}).Where("system_id = ?", system.ID).Offset(startIdx).Limit(perPageNum).Find(&peers)
-
+	var activeUsers int = 0
 	peersInfo := make([]models.PeerInfo, len(peers))
 	for i, peer := range peers {
 		peersInfo[i].Name = peer.Name
@@ -90,7 +90,13 @@ func SystemShow(c *gin.Context) {
 		peersInfo[i].BuyDate = peer.BuyDate
 		peersInfo[i].ExpireDate = peer.ExpireDate
 		peersInfo[i].IsActive = peer.IsActive
+		if peer.IsActive == true {
+			activeUsers++
+		}
+
 	}
+	systemInfo.ActivePeersCount = activeUsers
+	systemInfo.ActivePeersCount = len(peers)
 	systemInfo.Peers = peersInfo
 
 	c.JSON(200, systemInfo)
@@ -251,6 +257,13 @@ func TestSystemReload(c *gin.Context) {
 		return
 	}
 	c.JSON(http.StatusOK, gin.H{"message": "System reloaded"})
+	var systemTransfer float32 = 0
+	for _, peer := range system.Peers {
+		systemTransfer += peer.Usage
+	}
+	system.TotalUsage = systemTransfer
+	initializers.DB.Save(&system)
+
 }
 
 // TestSystemCreatePeer godoc

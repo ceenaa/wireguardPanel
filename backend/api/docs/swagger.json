@@ -176,6 +176,41 @@
                 }
             }
         },
+        "/peers/{name}/conf": {
+            "get": {
+                "description": "Retrieve a peer's config by name.",
+                "produces": [
+                    "text/plain"
+                ],
+                "tags": [
+                    "Peers"
+                ],
+                "summary": "Get a peer's config",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Peer name",
+                        "name": "name",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Peer config",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "404": {
+                        "description": "Peer not found\" \"System not found",
+                        "schema": {
+                            "$ref": "#/definitions/gin.H"
+                        }
+                    }
+                }
+            }
+        },
         "/peers/{name}/pause": {
             "put": {
                 "description": "Pause a peer by name.",
@@ -204,6 +239,41 @@
                     },
                     "400": {
                         "description": "Peer already paused\" \"Peer not found\" \"System not found",
+                        "schema": {
+                            "$ref": "#/definitions/gin.H"
+                        }
+                    }
+                }
+            }
+        },
+        "/peers/{name}/qr": {
+            "get": {
+                "description": "Retrieve a peer's QR code by name.",
+                "produces": [
+                    "image/png"
+                ],
+                "tags": [
+                    "Peers"
+                ],
+                "summary": "Get a peer's QR code",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Peer name",
+                        "name": "name",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Peer QR code",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "404": {
+                        "description": "Peer not found\" \"System not found",
                         "schema": {
                             "$ref": "#/definitions/gin.H"
                         }

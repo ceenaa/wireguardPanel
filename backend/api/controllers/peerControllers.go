@@ -241,6 +241,15 @@ func PeerResetUsage(c *gin.Context) {
 	c.JSON(200, gin.H{"message": "Peer usage reset", "wireguard": message})
 }
 
+// PeerShowConfig godoc
+// @Summary Get a peer's config
+// @Description Retrieve a peer's config by name.
+// @Param name path string true "Peer name"
+// @Tags Peers
+// @Produce plain
+// @Success 200 {object} string "Peer config"
+// @Failure 404 {object} gin.H "Peer not found" "System not found"
+// @Router /peers/{name}/conf [get]
 func PeerShowConfig(c *gin.Context) {
 	name := c.Param("name")
 	var peer models.Peer
@@ -261,6 +270,15 @@ func PeerShowConfig(c *gin.Context) {
 	c.File(file)
 }
 
+// PeerShowQR godoc
+// @Summary Get a peer's QR code
+// @Description Retrieve a peer's QR code by name.
+// @Param name path string true "Peer name"
+// @Tags Peers
+// @Produce png
+// @Success 200 {object} string "Peer QR code"
+// @Failure 404 {object} gin.H "Peer not found" "System not found"
+// @Router /peers/{name}/qr [get]
 func PeerShowQR(c *gin.Context) {
 	name := c.Param("name")
 	var peer models.Peer
