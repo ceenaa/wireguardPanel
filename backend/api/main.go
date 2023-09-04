@@ -34,6 +34,7 @@ func main() {
 	r.GET("/validate", middleware.RequireAuth, controllers.Validate)
 
 	r.POST("/systems", middleware.RequireAuth, controllers.SystemCreate)
+	r.GET("/systems", middleware.RequireAuth, controllers.SystemsList)
 	r.POST("/systems/:name/peers", middleware.RequireAuth, controllers.SystemCreatePeer)
 	r.GET("/systems/:name", middleware.RequireAuth, controllers.SystemShow)
 	r.GET("/systems/:name/", middleware.RequireAuth, controllers.SystemShow)

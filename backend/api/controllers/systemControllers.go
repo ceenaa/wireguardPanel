@@ -41,6 +41,19 @@ func SystemCreate(c *gin.Context) {
 	c.JSON(200, gin.H{"message": "System created"})
 }
 
+// SystemsList godoc
+// @Summary System List
+// @Description Retrieve a list of systems.
+// @Tags Systems
+// @Produce json
+// Success 200 {object} []string "System names list"
+// @Router /systems [get]
+func SystemsList(c *gin.Context) {
+	var systemNames []string
+	initializers.DB.Model(&models.System{}).Pluck("name", &systemNames)
+	c.JSON(200, systemNames)
+}
+
 // SystemShow godoc
 // @Summary System Show
 // @Description description for SystemShow.

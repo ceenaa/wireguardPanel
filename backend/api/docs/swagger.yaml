@@ -101,6 +101,10 @@ definitions:
     type: object
   models.SystemInfo:
     properties:
+      activePeersCount:
+        type: integer
+      allPeersCount:
+        type: integer
       name:
         type: string
       peers:
@@ -367,6 +371,14 @@ paths:
       tags:
       - Authentication
   /systems:
+    get:
+      description: Retrieve a list of systems.
+      produces:
+      - application/json
+      responses: {}
+      summary: System List
+      tags:
+      - Systems
     post:
       consumes:
       - application/json

@@ -393,6 +393,17 @@ const docTemplate = `{
             }
         },
         "/systems": {
+            "get": {
+                "description": "Retrieve a list of systems.",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Systems"
+                ],
+                "summary": "System List",
+                "responses": {}
+            },
             "post": {
                 "description": "Create a new system with the specified name.",
                 "consumes": [
@@ -998,6 +1009,12 @@ const docTemplate = `{
         "models.SystemInfo": {
             "type": "object",
             "properties": {
+                "activePeersCount": {
+                    "type": "integer"
+                },
+                "allPeersCount": {
+                    "type": "integer"
+                },
                 "name": {
                     "type": "string"
                 },
