@@ -196,7 +196,7 @@ func SystemCreatePeer(c *gin.Context) {
 		return
 	}
 	var system models.System
-	initializers.DB.Where("name = ?", name).Preload("Peer").First(&system)
+	initializers.DB.Where("name = ?", name).Preload("Peers").First(&system)
 	if system.ID == 0 {
 		c.JSON(404, gin.H{"error": "System not found"})
 		return
@@ -264,7 +264,7 @@ func SystemReload(c *gin.Context) {
 func TestSystemReload(c *gin.Context) {
 	name := c.Param("name")
 	var system models.System
-	initializers.DB.Where("name = ?", name).First(&system)
+	initializers.DB.Where("name = ?", name).Preload("Peers").First(&system)
 	if system.ID == 0 {
 		c.JSON(404, gin.H{"error": "System not found"})
 		return
@@ -300,7 +300,7 @@ func TestSystemCreatePeer(c *gin.Context) {
 		return
 	}
 	var system models.System
-	initializers.DB.Where("name = ?", name).Preload("Peer").First(&system)
+	initializers.DB.Where("name = ?", name).Preload("Peers").First(&system)
 	if system.ID == 0 {
 		c.JSON(404, gin.H{"error": "System not found"})
 		return
