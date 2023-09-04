@@ -8,6 +8,7 @@ import { BiLinkAlt } from 'react-icons/bi';
 import { MdWifi, MdWifiOff } from 'react-icons/md';
 
 function PeersTableItem({ peerName, isActive, remainingDays, remainingUsage, dataLimit }) {
+  // navigator
 	const navigate = useNavigate();
 
 	// jsx

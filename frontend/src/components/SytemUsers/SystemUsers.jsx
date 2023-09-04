@@ -13,7 +13,7 @@ function SystemUsers() {
 				<div className="flex h-[70px] w-[70px] items-center justify-center rounded-full bg-slate-700">
 					<HiShieldCheck className="h-9 w-9 text-slate-300" />
 				</div>
-				<span className="font-Lalezar text-3xl text-slate-200">Users</span>
+				<span className="font-Lalezar text-3xl text-slate-200">Peers</span>
 			</div>
 			<div className="flex items-center justify-center gap-x-1.5">
 				<span className="text-3xl font-bold text-green-500">0</span>
