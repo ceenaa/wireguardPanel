@@ -1,5 +1,5 @@
 // react
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 
 // styles
@@ -15,8 +15,6 @@ import { userLogin } from '../../services/Axios/Requests/User/userLogin';
 
 // login
 function Login() {
-	document.title = 'Wireguard Panel - Login';
-  
 	// form handler
 	const { register, handleSubmit, reset } = useForm();
 
@@ -26,11 +24,24 @@ function Login() {
 	// navigator
 	const navigate = useNavigate();
 
+	// transition handler
+	const [isLoad, setIsLoad] = useState(true);
+  
+	// mounting side effects
+	useEffect(() => {
+		// change document title
+		document.title = 'Wireguard Panel - Login';
+	}, []);
+
 	// jsx
 	return (
 		<div className="flex h-screen items-center justify-center">
 			{/* container */}
-			<div className="flex h-auto w-[700px] flex-col items-center justify-between gap-y-[100px] rounded-3xl bg-slate-900 p-5 shadow-box2">
+			<div
+				className={`flex h-auto w-[700px] flex-col items-center justify-between gap-y-[100px] rounded-3xl bg-slate-900 p-5 shadow-box2 transition-opacity duration-300 ${
+					isLoad ? 'opacity-100' : 'opacity-0'
+				}`}
+			>
 				{/* title */}
 				<header className="font-Lalezar text-5xl text-slate-300">WireGuard Panel</header>
 				{/* inputs */}
@@ -59,6 +70,11 @@ function Login() {
 												// navigate to panel
 												navigate('/');
 											}, 2500);
+
+											setTimeout(() => {
+												// transition handler
+												setIsLoad(!isLoad);
+											}, 2200);
 										},
 										onClose: () => {
 											// enabling submit button

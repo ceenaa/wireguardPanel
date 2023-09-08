@@ -6,6 +6,7 @@ import Panel from './pages/Panel/Panel';
 // components
 import PeerDetails from './components/PeerDetails/PeerDetails';
 import NewPeer from './components/NewPeer/NewPeer';
+import SystemList from './components/SystemList/SystemList';
 
 // routes
 const routes = [
@@ -18,7 +19,8 @@ const routes = [
 		),
 		children: [
 			{ path: 'new-peer', element: <NewPeer /> },
-			{ path: 'peer/:peerName', element: <PeerDetails /> }
+			{ path: 'peer/:peerName', element: <PeerDetails /> },
+			{ path: 'system', element: <SystemList /> }
 		]
 	},
 	{ path: '/login', element: <Login /> }

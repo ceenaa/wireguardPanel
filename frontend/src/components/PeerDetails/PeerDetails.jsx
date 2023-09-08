@@ -3,8 +3,7 @@ import React, { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 
 // redux
-import { useSelector } from 'react-redux';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { getPeerFromServer } from '../../services/Redux/Slices/Peers';
 
 // react hook form
@@ -46,12 +45,18 @@ function NewPeer() {
 
 		// navigate to panel
 		setTimeout(() => {
+			// change document title
+			document.title = 'Wireguard Panel - Panel';
+
 			navigate('/');
 		}, 300);
 	};
 
 	// url params
 	const { peerName } = useParams();
+
+	// GET system name
+	const systemName = useSelector((state) => state.systemName);
 
 	// show success toast
 	const throwSuccessToast = (message) =>
@@ -66,7 +71,7 @@ function NewPeer() {
 			theme: 'dark',
 			progressStyle: { backgroundColor: '#0ea5e9' },
 			onOpen: () => {
-				dispatch(getSystemInfosFromServer());
+				dispatch(getSystemInfosFromServer(systemName));
 				setTimeout(() => {
 					// navigate to panel
 					closeModalHandler();
@@ -101,6 +106,9 @@ function NewPeer() {
 
 	// mounting side effects
 	useEffect(() => {
+		// change document title
+		document.title = `Wireguard Panel - ${peerName}`;
+
 		// get peers
 		dispatch(getPeerFromServer(peerName));
 

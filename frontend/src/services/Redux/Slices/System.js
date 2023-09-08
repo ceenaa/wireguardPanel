@@ -4,7 +4,7 @@ import { getSystemInfos } from '../../Axios/Requests/System/systemInfos';
 // GET system infos
 export const getSystemInfosFromServer = createAsyncThunk(
 	'system/getSystemInfosFromServer',
-	getSystemInfos
+	async (SystemName) => getSystemInfos(SystemName)
 );
 
 // system slice
@@ -13,6 +13,7 @@ const slice = createSlice({
 	initialState: [],
 	reducers: {},
 	extraReducers: (builder) => {
+		builder.addCase(getSystemInfosFromServer.pending, (state, action) => []);
 		builder.addCase(getSystemInfosFromServer.fulfilled, (state, action) => action.payload.data);
 	}
 });

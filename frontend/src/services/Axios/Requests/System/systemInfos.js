@@ -2,8 +2,8 @@
 import axiosInstance from '../../Configs/configs';
 
 // GET system infos
-const getSystemInfos = async () =>
-	axiosInstance.get(`/systems/MAHDI?page=1&per_page=10`, {
+const getSystemInfos = async (systemName) =>
+	axiosInstance.get(`/systems/${systemName}?page=1&per_page=10`, {
 		withCredentials: true
 	});
 

@@ -55,9 +55,8 @@ function PeersTable({ peers }) {
 				<tr className="child:font-Lalezar child:text-3xl child:leading-[72px]">
 					<th className="rounded-tl-3xl">User Name</th>
 					<th
-						className={`relative w-[400px] cursor-pointer transition-all hover:bg-slate-800 hover:shadow-box child:opacity-0 child:transition-all child:delay-100 child:hover:block child:hover:opacity-100 ${
-							(useSelector((state) => state.sort) === 'STATUS') |
-							(useSelector((state) => state.sort) === 'REVERSED - STATUS')
+						className={`relative w-[400px] cursor-pointer select-none transition-all hover:bg-slate-800 hover:shadow-box child:opacity-0 child:transition-all child:delay-100 child:hover:block child:hover:opacity-100 ${
+							(sortPlan === 'STATUS') | (sortPlan === 'REVERSED - STATUS')
 								? 'bg-slate-800 shadow-box child:block child:opacity-100'
 								: ''
 						}`}
@@ -65,7 +64,7 @@ function PeersTable({ peers }) {
 					>
 						Status
 						<div className="absolute right-[120px] top-4">
-							{useSelector((state) => state.sort) === 'REVERSED - STATUS' ? (
+							{sortPlan === 'REVERSED - STATUS' ? (
 								<BiChevronUp className="h-9 w-9 text-slate-400" />
 							) : (
 								<BiChevronDown className="h-9 w-9 text-slate-400" />
@@ -73,9 +72,8 @@ function PeersTable({ peers }) {
 						</div>
 					</th>
 					<th
-						className={`relative w-[440px] cursor-pointer transition-all hover:bg-slate-800 hover:shadow-box child:opacity-0 child:transition-all child:delay-100 child:hover:block child:hover:opacity-100 ${
-							(useSelector((state) => state.sort) === 'DATA') |
-							(useSelector((state) => state.sort) === 'REVERSED - DATA')
+						className={`relative w-[440px] cursor-pointer select-none transition-all hover:bg-slate-800 hover:shadow-box child:opacity-0 child:transition-all child:delay-100 child:hover:block child:hover:opacity-100 ${
+							(sortPlan === 'DATA') | (sortPlan === 'REVERSED - DATA')
 								? 'bg-slate-800 shadow-box child:block child:opacity-100'
 								: ''
 						}`}
@@ -83,7 +81,7 @@ function PeersTable({ peers }) {
 					>
 						Data Usage
 						<div className="absolute right-[120px] top-4">
-							{useSelector((state) => state.sort) === 'REVERSED - DATA' ? (
+							{sortPlan === 'REVERSED - DATA' ? (
 								<BiChevronUp className="h-9 w-9 text-slate-400" />
 							) : (
 								<BiChevronDown className="h-9 w-9 text-slate-400" />

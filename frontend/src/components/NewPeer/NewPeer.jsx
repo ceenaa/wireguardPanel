@@ -45,12 +45,24 @@ function NewPeer() {
 
 		// navigate to panel
 		setTimeout(() => {
+			// change document title
+			document.title = 'Wireguard Panel - Panel';
+
 			navigate('/');
 		}, 300);
 	};
 
+	// GET system name
+	let systemName = localStorage.getItem('system-name');
+
 	// mounting side effects
 	useEffect(() => {
+		// change document title
+		document.title = 'Wireguard Panel - New Peer';
+
+		// check if system name is set
+		systemName === null ? navigate('/system') : null;
+
 		// load transition
 		setIsLoad(true);
 	}, []);
@@ -82,7 +94,7 @@ function NewPeer() {
 					<form
 						className="flex flex-col gap-y-5 pt-5"
 						onSubmit={handleSubmit((data) => {
-							postNewPeer(data)
+							postNewPeer(data, systemName)
 								.then(() => {
 									dispatch(getSystemInfosFromServer());
 									// show success toast

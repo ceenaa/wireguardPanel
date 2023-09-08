@@ -11,6 +11,6 @@
 
 	@font-face {
 		font-family: 'Lalezar';
-		src: url(./Fonts/Lalezar-Font/OTF/Lalezar-Regular.otf) format('otf');
+		src: url(./Fonts/Lalezar/Lalezar-Regular.ttf);
 	}
 }

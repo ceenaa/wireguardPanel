@@ -20,10 +20,13 @@ function PeersHeader() {
 	// redux dispatch hook
 	const dispatch = useDispatch();
 
+	// GET system name
+	const systemName = localStorage.getItem('system-name');
+
 	// refresh button handler
 	const refreshHandler = () => {
 		// reload system
-		dispatch(getSystemInfosFromServer());
+		dispatch(getSystemInfosFromServer(systemName));
 
 		// reload search bar
 		dispatch(searchByName(''));
@@ -33,7 +36,7 @@ function PeersHeader() {
 	};
 
 	// automatic refresh system
-	setTimeout(() => dispatch(getSystemInfosFromServer()), 5 * 60 * 1000);
+	setTimeout(() => dispatch(getSystemInfosFromServer(systemName)), 5 * 60 * 1000);
 
 	// jsx
 	return (

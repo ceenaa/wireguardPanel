@@ -2,8 +2,8 @@
 import axiosInstance from '../../Configs/configs';
 
 // POST new peer
-const postNewPeer = async (newPeerInfos) =>
-	axiosInstance.post(`/test/systems/MAHDI/peers`, newPeerInfos, {
+const postNewPeer = async (newPeerInfos, systemName) =>
+	axiosInstance.post(`/test/systems/${systemName}/peers`, newPeerInfos, {
 		withCredentials: true
 	});
 

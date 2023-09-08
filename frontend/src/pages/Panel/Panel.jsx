@@ -1,5 +1,6 @@
+import { useNavigate } from 'react-router-dom';
 // react
-import React, { memo, useCallback, useEffect, useMemo, useState } from 'react';
+import React, { useEffect } from 'react';
 
 // redux
 import { useDispatch, useSelector } from 'react-redux';
@@ -15,20 +16,35 @@ import { Outlet } from 'react-router-dom';
 
 // panel
 function Panel() {
+	// navigator
+	const navigate = useNavigate();
+
 	// redux dispatch hook
 	const dispatch = useDispatch();
-
-	// mounting side effects
-	useEffect(() => {
-		// GET system infos
-		dispatch(getSystemInfosFromServer());
-	}, []);
 
 	// system infos
 	let systemInfos = useSelector((state) => state.system);
 
 	// peers list
 	let peers = useSelector((state) => state.system.Peers);
+
+	// GET system name
+	let systemName = localStorage.getItem('system-name');
+
+	// mounting side effects
+	useEffect(() => {
+		// change document title
+		document.title = 'Wireguard Panel - Panel';
+	}, []);
+
+	// mounting side effects
+	useEffect(() => {
+		// check if system name is set
+		systemName === null ? navigate('/system') : null;
+
+		// GET system infos
+		dispatch(getSystemInfosFromServer(systemName));
+	}, [systemName]);
 
 	// jsx
 	return (
