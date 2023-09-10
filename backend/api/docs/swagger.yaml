@@ -425,6 +425,9 @@ paths:
         type: integer
       - default: '"asc"'
         description: Order
+        enum:
+        - desc
+        - asc
         in: query
         name: order
         type: string
@@ -545,6 +548,9 @@ paths:
         type: integer
       - default: '"desc"'
         description: Order
+        enum:
+        - desc
+        - asc
         in: query
         name: order
         type: string

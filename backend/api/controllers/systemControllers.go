@@ -61,7 +61,7 @@ func SystemsList(c *gin.Context) {
 // @Param name path string true "System name"
 // @Param page query int false "Page number" default(1)
 // @Param per_page query int false "Items per page" default(10)
-// @Param order query string false "Order" default("asc")
+// @Param order query string false "Order" default("asc") Enums(desc, asc)
 // @Produce json
 // @Success 200 {object} models.SystemInfo "System information"
 // @Failure 400 {object} gin.H "Invalid page number" "Invalid per page number" "Invalid system fetching"
@@ -74,6 +74,10 @@ func SystemShow(c *gin.Context) {
 	pageNum, err := strconv.Atoi(page)
 	if err != nil {
 		c.JSON(400, gin.H{"error": "Invalid page number"})
+		return
+	}
+	if order != "asc" && order != "desc" {
+		c.JSON(400, gin.H{"error": "Invalid order"})
 		return
 	}
 	perPageNum, err := strconv.Atoi(perPage)
@@ -125,7 +129,7 @@ func SystemShow(c *gin.Context) {
 // @Param name path string true "System name"
 // @Param page query int false "Page number" default(1)
 // @Param per_page query int false "Items per page" default(10)
-// @Param order query string false "Order" default("desc")
+// @Param order query string false "Order" default("desc") Enums(desc, asc)
 // @Produce json
 // @Success 200 {object} models.SystemInfo "System information"
 // @Failure 400 {object} gin.H "Invalid page number" "Invalid per page number"
@@ -136,6 +140,10 @@ func SystemShowBasedOnUsage(c *gin.Context) {
 	page := c.DefaultQuery("page", "1")
 	perPage := c.DefaultQuery("per_page", "10")
 	order := c.DefaultQuery("order", "desc")
+	if order != "asc" && order != "desc" {
+		c.JSON(400, gin.H{"error": "Invalid order"})
+		return
+	}
 	pageNum, err := strconv.Atoi(page)
 	if err != nil {
 		c.JSON(400, gin.H{"error": "Invalid page number"})

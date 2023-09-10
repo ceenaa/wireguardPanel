@@ -476,6 +476,10 @@ const docTemplate = `{
                         "in": "query"
                     },
                     {
+                        "enum": [
+                            "desc",
+                            "asc"
+                        ],
                         "type": "string",
                         "default": "\"asc\"",
                         "description": "Order",
@@ -655,6 +659,10 @@ const docTemplate = `{
                         "in": "query"
                     },
                     {
+                        "enum": [
+                            "desc",
+                            "asc"
+                        ],
                         "type": "string",
                         "default": "\"desc\"",
                         "description": "Order",
