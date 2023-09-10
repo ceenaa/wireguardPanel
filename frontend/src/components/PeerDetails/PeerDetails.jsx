@@ -56,7 +56,7 @@ function NewPeer() {
 	const { peerName } = useParams();
 
 	// GET system name
-	const systemName = useSelector((state) => state.systemName);
+	const systemName = localStorage.getItem('system-name');
 
 	// show success toast
 	const throwSuccessToast = (message) =>

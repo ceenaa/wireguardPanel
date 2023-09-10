@@ -1,6 +1,6 @@
-import { useNavigate } from 'react-router-dom';
 // react
 import React, { useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 // redux
 import { useDispatch, useSelector } from 'react-redux';
@@ -54,7 +54,10 @@ function Panel() {
 				<main>
 					<div className="mt-6 flex flex-wrap items-center justify-between lg:px-16">
 						<SystemDataUsage totalUsage={systemInfos.TotalUsage} title="Data Usage" />
-						<SystemUsers />
+						<SystemUsers
+							activePeers={systemInfos.ActivePeersCount}
+							deActivePeers={systemInfos.AllPeersCount}
+						/>
 					</div>
 					{systemInfos.Peers ? (
 						<>

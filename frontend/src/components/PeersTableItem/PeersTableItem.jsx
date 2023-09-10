@@ -2,14 +2,34 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 
-// packages
+// icons
 import { IoQrCodeSharp } from 'react-icons/io5';
 import { BiLinkAlt } from 'react-icons/bi';
 import { MdWifi, MdWifiOff } from 'react-icons/md';
 
+// axios
+import { getPeerConfigs } from '../../services/Axios/Requests/Peer/peerConfigs';
+
 function PeersTableItem({ peerName, isActive, remainingDays, remainingUsage, dataLimit }) {
-  // navigator
+	// navigator
 	const navigate = useNavigate();
+
+	// peer config file
+	const peerConfigHandler = () => {
+		getPeerConfigs(peerName).then((res) => {
+			const href = window.URL.createObjectURL(res.data);
+			const anchorElement = document.createElement('a');
+
+			anchorElement.href = href;
+			anchorElement.download = `${peerName}.txt`;
+
+			document.body.appendChild(anchorElement);
+			anchorElement.click();
+
+			document.body.removeChild(anchorElement);
+			window.URL.revokeObjectURL(href);
+		});
+	};
 
 	// jsx
 	return (
@@ -63,7 +83,10 @@ function PeersTableItem({ peerName, isActive, remainingDays, remainingUsage, dat
 					<button className="flex h-[50px] w-[50px] items-center justify-center rounded-lg transition-all hover:bg-slate-700 hover:shadow-box">
 						<IoQrCodeSharp className="h-9 w-9 text-slate-400 " />
 					</button>
-					<button className="flex h-[50px] w-[50px] items-center justify-center rounded-lg transition-all hover:bg-slate-700 hover:shadow-box">
+					<button
+						className="flex h-[50px] w-[50px] items-center justify-center rounded-lg transition-all hover:bg-slate-700 hover:shadow-box"
+						onClick={peerConfigHandler}
+					>
 						<BiLinkAlt className="h-9 w-9 text-slate-400" />
 					</button>
 				</div>

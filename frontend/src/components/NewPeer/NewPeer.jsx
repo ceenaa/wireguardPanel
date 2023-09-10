@@ -96,7 +96,7 @@ function NewPeer() {
 						onSubmit={handleSubmit((data) => {
 							postNewPeer(data, systemName)
 								.then(() => {
-									dispatch(getSystemInfosFromServer());
+									dispatch(getSystemInfosFromServer(systemName));
 									// show success toast
 									toast.success('New Peer Created ✅', {
 										position: 'bottom-right',
