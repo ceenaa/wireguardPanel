@@ -62,7 +62,8 @@ func SystemsList(c *gin.Context) {
 // @Param page query int false "Page number" default(1)
 // @Param per_page query int false "Items per page" default(10)
 // @Param order query string false "Order" default("asc") Enums(desc, asc)
-// @Param sort_by query string false "Sort by" default("expire_date") Enums(expire_date, usage, is_active)
+// @Param sort_by query string false "Sort by" default("expire_date") Enums(expire_date, usage)
+// @Param status query string false "Status by" default () Enums(enable, disable)
 // @Param peer_name query string false "Peer name" default()
 // @Produce json
 // @Success 200 {object} models.SystemInfo "System information"
@@ -74,7 +75,12 @@ func SystemShow(c *gin.Context) {
 	perPage := c.DefaultQuery("per_page", "10")
 	order := c.DefaultQuery("order", "asc")
 	sortBy := c.DefaultQuery("sort_by", "expire_date")
-	peer_name := c.DefaultQuery("peer_name", "")
+	status := c.DefaultQuery("status", "")
+	peerName := c.DefaultQuery("peer_name", "")
+	if status != "enable" && status != "disable" && status != "" {
+		c.JSON(400, gin.H{"error": "Invalid is active"})
+		return
+	}
 	if sortBy != "expire_date" && sortBy != "usage" && sortBy != "is_active" {
 		c.JSON(400, gin.H{"error": "Invalid sort by"})
 		return
@@ -107,7 +113,17 @@ func SystemShow(c *gin.Context) {
 	systemInfo.TotalUsage = system.TotalUsage
 
 	var peers []models.Peer
-	initializers.DB.Model(&models.Peer{}).Where("system_id = ?", system.ID).Where("name LIKE ?", "%"+peer_name+"%").Order(sortBy + " " + order).Offset(startIdx).Limit(perPageNum).Find(&peers)
+
+	if status == "" {
+		initializers.DB.Model(&models.Peer{}).Where("system_id = ?", system.ID).Where("name LIKE ?", "%"+peerName+"%").Order(sortBy + " " + order).Offset(startIdx).Limit(perPageNum).Find(&peers)
+
+	} else if status == "enable" {
+		initializers.DB.Model(&models.Peer{}).Where("system_id = ?", system.ID).Where("is_active = ?", true).Where("name LIKE ?", "%"+peerName+"%").Order(sortBy + " " + order).Offset(startIdx).Limit(perPageNum).Find(&peers)
+
+	} else {
+		initializers.DB.Model(&models.Peer{}).Where("system_id = ?", system.ID).Where("is_active = ?", false).Where("name LIKE ?", "%"+peerName+"%").Order(sortBy + " " + order).Offset(startIdx).Limit(perPageNum).Find(&peers)
+	}
+
 	var activeUsers int = 0
 	peersInfo := make([]models.PeerInfo, len(peers))
 	for i, peer := range peers {

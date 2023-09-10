@@ -436,9 +436,15 @@ paths:
         enum:
         - expire_date
         - usage
-        - is_active
         in: query
         name: sort_by
+        type: string
+      - description: Status by
+        enum:
+        - enable
+        - disable
+        in: query
+        name: status
         type: string
       - default: ""
         description: Peer name
