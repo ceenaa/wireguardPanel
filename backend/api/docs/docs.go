@@ -485,6 +485,18 @@ const docTemplate = `{
                         "description": "Order",
                         "name": "order",
                         "in": "query"
+                    },
+                    {
+                        "enum": [
+                            "expire_date",
+                            "usage",
+                            "is_active"
+                        ],
+                        "type": "string",
+                        "default": "\"expire_date\"",
+                        "description": "Sort by",
+                        "name": "sort_by",
+                        "in": "query"
                     }
                 ],
                 "responses": {

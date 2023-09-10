@@ -431,6 +431,15 @@ paths:
         in: query
         name: order
         type: string
+      - default: '"expire_date"'
+        description: Sort by
+        enum:
+        - expire_date
+        - usage
+        - is_active
+        in: query
+        name: sort_by
+        type: string
       produces:
       - application/json
       responses:
