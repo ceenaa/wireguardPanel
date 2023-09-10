@@ -109,7 +109,7 @@ func SystemShow(c *gin.Context) {
 
 	}
 	systemInfo.ActivePeersCount = activeUsers
-	systemInfo.ActivePeersCount = len(peers)
+	systemInfo.AllPeersCount = len(peers)
 	systemInfo.Peers = peersInfo
 
 	c.JSON(200, systemInfo)
@@ -331,4 +331,30 @@ func TestSystemCreatePeer(c *gin.Context) {
 	}
 	wireguard.GenerateConfigFiles(peer.Name, system.Name, system.PublicKey, peer.PrivateKey, peer.PreSharedKey, peer.ConfigEndPoint, peer.AllowedIP)
 	c.JSON(200, gin.H{"message": "Peer created"})
+}
+
+// AddUsageToLastUsage godoc
+// @Summary Adds usage to last usage
+// @Description Adds usage to last usage for all peers of a system.
+// @Tags Systems
+// @Param name path string true "System name"
+// @Produce json
+// @Success 200 {object} gin.H "Usage added to last usage"
+// @Failure 404 {object} gin.H "System not found"
+// @Router /systems/{name}/add_usage [put]
+func AddUsageToLastUsage(c *gin.Context) {
+	name := c.Param("name")
+	var system models.System
+	initializers.DB.Where("name = ?", name).Preload("Peers").First(&system)
+	if system.ID == 0 {
+		c.JSON(404, gin.H{"error": "System not found"})
+		return
+	}
+	for _, peer := range system.Peers {
+		peer.LastUsage = peer.Usage
+		peer.Usage = 0
+		initializers.DB.Save(&peer)
+	}
+
+	c.JSON(200, gin.H{"message": "Usage added to last usage"})
 }
