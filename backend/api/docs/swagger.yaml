@@ -440,6 +440,11 @@ paths:
         in: query
         name: sort_by
         type: string
+      - default: ""
+        description: Peer name
+        in: query
+        name: peer_name
+        type: string
       produces:
       - application/json
       responses:

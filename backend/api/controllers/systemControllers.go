@@ -63,6 +63,7 @@ func SystemsList(c *gin.Context) {
 // @Param per_page query int false "Items per page" default(10)
 // @Param order query string false "Order" default("asc") Enums(desc, asc)
 // @Param sort_by query string false "Sort by" default("expire_date") Enums(expire_date, usage, is_active)
+// @Param peer_name query string false "Peer name" default()
 // @Produce json
 // @Success 200 {object} models.SystemInfo "System information"
 // @Failure 400 {object} gin.H "Invalid page number" "Invalid per page number" "Invalid system fetching"
@@ -73,6 +74,7 @@ func SystemShow(c *gin.Context) {
 	perPage := c.DefaultQuery("per_page", "10")
 	order := c.DefaultQuery("order", "asc")
 	sortBy := c.DefaultQuery("sort_by", "expire_date")
+	peer_name := c.DefaultQuery("peer_name", "")
 	if sortBy != "expire_date" && sortBy != "usage" && sortBy != "is_active" {
 		c.JSON(400, gin.H{"error": "Invalid sort by"})
 		return
@@ -105,7 +107,7 @@ func SystemShow(c *gin.Context) {
 	systemInfo.TotalUsage = system.TotalUsage
 
 	var peers []models.Peer
-	initializers.DB.Model(&models.Peer{}).Where("system_id = ?", system.ID).Order(sortBy + " " + order).Offset(startIdx).Limit(perPageNum).Find(&peers)
+	initializers.DB.Model(&models.Peer{}).Where("system_id = ?", system.ID).Where("name LIKE ?", "%"+peer_name+"%").Order(sortBy + " " + order).Offset(startIdx).Limit(perPageNum).Find(&peers)
 	var activeUsers int = 0
 	peersInfo := make([]models.PeerInfo, len(peers))
 	for i, peer := range peers {

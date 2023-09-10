@@ -497,6 +497,13 @@ const docTemplate = `{
                         "description": "Sort by",
                         "name": "sort_by",
                         "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "default": "",
+                        "description": "Peer name",
+                        "name": "peer_name",
+                        "in": "query"
                     }
                 ],
                 "responses": {
