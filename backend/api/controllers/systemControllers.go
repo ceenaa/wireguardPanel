@@ -61,6 +61,9 @@ func SystemsList(c *gin.Context) {
 // @Param name path string true "System name"
 // @Param page query int false "Page number" default(1)
 // @Param per_page query int false "Items per page" default(10)
+// @Param order query string false "Order" default("asc") Enums(desc, asc)
+// @Param sort_by query string false "Sort by" default("expire_date") Enums(expire_date, usage, is_active)
+// @Param peer_name query string false "Peer name" default()
 // @Produce json
 // @Success 200 {object} models.SystemInfo "System information"
 // @Failure 400 {object} gin.H "Invalid page number" "Invalid per page number" "Invalid system fetching"
@@ -69,9 +72,20 @@ func SystemShow(c *gin.Context) {
 	name := c.Param("name")
 	page := c.DefaultQuery("page", "1")
 	perPage := c.DefaultQuery("per_page", "10")
+	order := c.DefaultQuery("order", "asc")
+	sortBy := c.DefaultQuery("sort_by", "expire_date")
+	peer_name := c.DefaultQuery("peer_name", "")
+	if sortBy != "expire_date" && sortBy != "usage" && sortBy != "is_active" {
+		c.JSON(400, gin.H{"error": "Invalid sort by"})
+		return
+	}
 	pageNum, err := strconv.Atoi(page)
 	if err != nil {
 		c.JSON(400, gin.H{"error": "Invalid page number"})
+		return
+	}
+	if order != "asc" && order != "desc" {
+		c.JSON(400, gin.H{"error": "Invalid order"})
 		return
 	}
 	perPageNum, err := strconv.Atoi(perPage)
@@ -93,7 +107,7 @@ func SystemShow(c *gin.Context) {
 	systemInfo.TotalUsage = system.TotalUsage
 
 	var peers []models.Peer
-	initializers.DB.Model(&models.Peer{}).Where("system_id = ?", system.ID).Offset(startIdx).Limit(perPageNum).Find(&peers)
+	initializers.DB.Model(&models.Peer{}).Where("system_id = ?", system.ID).Where("name LIKE ?", "%"+peer_name+"%").Order(sortBy + " " + order).Offset(startIdx).Limit(perPageNum).Find(&peers)
 	var activeUsers int = 0
 	peersInfo := make([]models.PeerInfo, len(peers))
 	for i, peer := range peers {
@@ -109,60 +123,10 @@ func SystemShow(c *gin.Context) {
 
 	}
 	systemInfo.ActivePeersCount = activeUsers
-	systemInfo.ActivePeersCount = len(peers)
+	systemInfo.AllPeersCount = len(peers)
 	systemInfo.Peers = peersInfo
 
 	c.JSON(200, systemInfo)
-
-}
-
-// SystemShowBasedOnUsage godoc
-// @Summary Get systems based on usage
-// @Description Retrieve systems based on usage, sorted by usage.
-// @Tags Systems
-// @Param name path string true "System name"
-// @Param page query int false "Page number" default(1)
-// @Param per_page query int false "Items per page" default(10)
-// @Produce json
-// @Success 200 {object} models.SystemInfo "System information"
-// @Failure 400 {object} gin.H "Invalid page number" "Invalid per page number"
-// @Failure 404 {object} gin.H "System not found"
-// @Router /systems/{name}/usage [get]
-func SystemShowBasedOnUsage(c *gin.Context) {
-	name := c.Param("name")
-	page := c.DefaultQuery("page", "1")
-	perPage := c.DefaultQuery("per_page", "10")
-	pageNum, err := strconv.Atoi(page)
-	if err != nil {
-		c.JSON(400, gin.H{"error": "Invalid page number"})
-		return
-	}
-	perPageNum, err := strconv.Atoi(perPage)
-	if err != nil {
-		c.JSON(400, gin.H{"error": "Invalid per page number"})
-		return
-	}
-	startIdx := (pageNum - 1) * perPageNum
-
-	var systemID int
-	initializers.DB.Model(&models.System{}).Where("name = ?", name).Select("id").First(&systemID)
-	if systemID == 0 {
-		c.JSON(404, gin.H{"error": "System not found"})
-		return
-	}
-	var peers []models.Peer
-	initializers.DB.Model(&models.Peer{}).Where("system_id = ?", systemID).Order("usage desc").Offset(startIdx).Limit(perPageNum).Find(&peers)
-	peersInfo := make([]models.PeerInfo, len(peers))
-	for i, peer := range peers {
-		peersInfo[i].Name = peer.Name
-		peersInfo[i].Usage = peer.Usage
-		peersInfo[i].DataLimit = peer.DataLimit
-		peersInfo[i].BuyDate = peer.BuyDate
-		peersInfo[i].ExpireDate = peer.ExpireDate
-		peersInfo[i].IsActive = peer.IsActive
-	}
-
-	c.JSON(200, peersInfo)
 }
 
 type systemCreatePeerBody struct {
@@ -331,4 +295,30 @@ func TestSystemCreatePeer(c *gin.Context) {
 	}
 	wireguard.GenerateConfigFiles(peer.Name, system.Name, system.PublicKey, peer.PrivateKey, peer.PreSharedKey, peer.ConfigEndPoint, peer.AllowedIP)
 	c.JSON(200, gin.H{"message": "Peer created"})
+}
+
+// AddUsageToLastUsage godoc
+// @Summary Adds usage to last usage
+// @Description Adds usage to last usage for all peers of a system.
+// @Tags Systems
+// @Param name path string true "System name"
+// @Produce json
+// @Success 200 {object} gin.H "Usage added to last usage"
+// @Failure 404 {object} gin.H "System not found"
+// @Router /systems/{name}/add_usage [put]
+func AddUsageToLastUsage(c *gin.Context) {
+	name := c.Param("name")
+	var system models.System
+	initializers.DB.Where("name = ?", name).Preload("Peers").First(&system)
+	if system.ID == 0 {
+		c.JSON(404, gin.H{"error": "System not found"})
+		return
+	}
+	for _, peer := range system.Peers {
+		peer.LastUsage = peer.Usage
+		peer.Usage = 0
+		initializers.DB.Save(&peer)
+	}
+
+	c.JSON(200, gin.H{"message": "Usage added to last usage"})
 }

@@ -423,6 +423,28 @@ paths:
         in: query
         name: per_page
         type: integer
+      - default: '"asc"'
+        description: Order
+        enum:
+        - desc
+        - asc
+        in: query
+        name: order
+        type: string
+      - default: '"expire_date"'
+        description: Sort by
+        enum:
+        - expire_date
+        - usage
+        - is_active
+        in: query
+        name: sort_by
+        type: string
+      - default: ""
+        description: Peer name
+        in: query
+        name: peer_name
+        type: string
       produces:
       - application/json
       responses:
@@ -436,6 +458,29 @@ paths:
           schema:
             $ref: '#/definitions/gin.H'
       summary: System Show
+      tags:
+      - Systems
+  /systems/{name}/add_usage:
+    put:
+      description: Adds usage to last usage for all peers of a system.
+      parameters:
+      - description: System name
+        in: path
+        name: name
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Usage added to last usage
+          schema:
+            $ref: '#/definitions/gin.H'
+        "404":
+          description: System not found
+          schema:
+            $ref: '#/definitions/gin.H'
+      summary: Adds usage to last usage
       tags:
       - Systems
   /systems/{name}/peers:
@@ -494,43 +539,6 @@ paths:
           schema:
             $ref: '#/definitions/gin.H'
       summary: Reload a system
-      tags:
-      - Systems
-  /systems/{name}/usage:
-    get:
-      description: Retrieve systems based on usage, sorted by usage.
-      parameters:
-      - description: System name
-        in: path
-        name: name
-        required: true
-        type: string
-      - default: 1
-        description: Page number
-        in: query
-        name: page
-        type: integer
-      - default: 10
-        description: Items per page
-        in: query
-        name: per_page
-        type: integer
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: System information
-          schema:
-            $ref: '#/definitions/models.SystemInfo'
-        "400":
-          description: Invalid page number" "Invalid per page number
-          schema:
-            $ref: '#/definitions/gin.H'
-        "404":
-          description: System not found
-          schema:
-            $ref: '#/definitions/gin.H'
-      summary: Get systems based on usage
       tags:
       - Systems
   /test/peers/{name}/pause:

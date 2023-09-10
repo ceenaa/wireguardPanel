@@ -37,7 +37,7 @@ func main() {
 	r.GET("/systems", middleware.RequireAuth, controllers.SystemsList)
 	r.POST("/systems/:name/peers", middleware.RequireAuth, controllers.SystemCreatePeer)
 	r.GET("/systems/:name", middleware.RequireAuth, controllers.SystemShow)
-	r.GET("/systems/:name/sort/usage", middleware.RequireAuth, controllers.SystemShowBasedOnUsage)
+	r.PUT("/systems/:name/add_usage", middleware.RequireAuth, controllers.AddUsageToLastUsage)
 
 	r.GET("/peers/:name", middleware.RequireAuth, controllers.PeerShow)
 	r.GET("/peers/:name/conf", middleware.RequireAuth, controllers.PeerShowConfig)
