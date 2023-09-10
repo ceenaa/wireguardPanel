@@ -536,51 +536,6 @@ paths:
       summary: Reload a system
       tags:
       - Systems
-  /systems/{name}/usage:
-    get:
-      description: Retrieve systems based on usage, sorted by usage.
-      parameters:
-      - description: System name
-        in: path
-        name: name
-        required: true
-        type: string
-      - default: 1
-        description: Page number
-        in: query
-        name: page
-        type: integer
-      - default: 10
-        description: Items per page
-        in: query
-        name: per_page
-        type: integer
-      - default: '"desc"'
-        description: Order
-        enum:
-        - desc
-        - asc
-        in: query
-        name: order
-        type: string
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: System information
-          schema:
-            $ref: '#/definitions/models.SystemInfo'
-        "400":
-          description: Invalid page number" "Invalid per page number
-          schema:
-            $ref: '#/definitions/gin.H'
-        "404":
-          description: System not found
-          schema:
-            $ref: '#/definitions/gin.H'
-      summary: Get systems based on usage
-      tags:
-      - Systems
   /test/peers/{name}/pause:
     put:
       description: Pause a peer by name.
