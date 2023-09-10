@@ -57,7 +57,7 @@ function SystemList() {
 			>
 				<div className="absolute -z-0 h-full w-full" onClick={closeModalHandler}></div>
 				<div className="z-10 h-auto w-[566px] overflow-scroll rounded-3xl bg-slate-800 p-10">
-					<span className="relative block w-full select-none items-center justify-center gap-x-5 text-center font-Lalezar text-3xl text-slate-300">
+					<span className="relative block w-full select-none text-center font-Lalezar text-3xl text-slate-300">
 						<BsBoxes className="absolute left-32 top-[2px]" />
 						System List
 					</span>
@@ -71,7 +71,7 @@ function SystemList() {
 									localStorage.setItem('system-name', system);
 
 									// show success toast
-									toast.success('System Name Changed ✅', {
+									toast.success('System Changed ✅', {
 										position: 'bottom-right',
 										autoClose: 5000,
 										hideProgressBar: false,
@@ -85,9 +85,6 @@ function SystemList() {
 											setTimeout(() => {
 												// navigate to panel
 												closeModalHandler();
-
-												// reset form values
-												reset();
 											}, 2500);
 										}
 									});

@@ -80,7 +80,10 @@ function PeersTableItem({ peerName, isActive, remainingDays, remainingUsage, dat
 			{/* Action Buttons */}
 			<td className="p-5">
 				<div className="flex items-center justify-between gap-x-[60px]">
-					<button className="flex h-[50px] w-[50px] items-center justify-center rounded-lg transition-all hover:bg-slate-700 hover:shadow-box">
+					<button
+						className="flex h-[50px] w-[50px] items-center justify-center rounded-lg transition-all hover:bg-slate-700 hover:shadow-box"
+						onClick={() => navigate(`peer/${peerName}/qrcode`)}
+					>
 						<IoQrCodeSharp className="h-9 w-9 text-slate-400 " />
 					</button>
 					<button
