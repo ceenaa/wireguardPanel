@@ -474,6 +474,13 @@ const docTemplate = `{
                         "description": "Items per page",
                         "name": "per_page",
                         "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "default": "\"asc\"",
+                        "description": "Order",
+                        "name": "order",
+                        "in": "query"
                     }
                 ],
                 "responses": {
@@ -485,6 +492,41 @@ const docTemplate = `{
                     },
                     "400": {
                         "description": "Invalid page number\" \"Invalid per page number\" \"Invalid system fetching",
+                        "schema": {
+                            "$ref": "#/definitions/gin.H"
+                        }
+                    }
+                }
+            }
+        },
+        "/systems/{name}/add_usage": {
+            "put": {
+                "description": "Adds usage to last usage for all peers of a system.",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Systems"
+                ],
+                "summary": "Adds usage to last usage",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "System name",
+                        "name": "name",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Usage added to last usage",
+                        "schema": {
+                            "$ref": "#/definitions/gin.H"
+                        }
+                    },
+                    "404": {
+                        "description": "System not found",
                         "schema": {
                             "$ref": "#/definitions/gin.H"
                         }
@@ -610,6 +652,13 @@ const docTemplate = `{
                         "default": 10,
                         "description": "Items per page",
                         "name": "per_page",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "default": "\"desc\"",
+                        "description": "Order",
+                        "name": "order",
                         "in": "query"
                     }
                 ],

@@ -61,6 +61,7 @@ func SystemsList(c *gin.Context) {
 // @Param name path string true "System name"
 // @Param page query int false "Page number" default(1)
 // @Param per_page query int false "Items per page" default(10)
+// @Param order query string false "Order" default("asc")
 // @Produce json
 // @Success 200 {object} models.SystemInfo "System information"
 // @Failure 400 {object} gin.H "Invalid page number" "Invalid per page number" "Invalid system fetching"
@@ -69,6 +70,7 @@ func SystemShow(c *gin.Context) {
 	name := c.Param("name")
 	page := c.DefaultQuery("page", "1")
 	perPage := c.DefaultQuery("per_page", "10")
+	order := c.DefaultQuery("order", "asc")
 	pageNum, err := strconv.Atoi(page)
 	if err != nil {
 		c.JSON(400, gin.H{"error": "Invalid page number"})
@@ -93,7 +95,7 @@ func SystemShow(c *gin.Context) {
 	systemInfo.TotalUsage = system.TotalUsage
 
 	var peers []models.Peer
-	initializers.DB.Model(&models.Peer{}).Where("system_id = ?", system.ID).Offset(startIdx).Limit(perPageNum).Find(&peers)
+	initializers.DB.Model(&models.Peer{}).Where("system_id = ?", system.ID).Order("expire_date " + order).Offset(startIdx).Limit(perPageNum).Find(&peers)
 	var activeUsers int = 0
 	peersInfo := make([]models.PeerInfo, len(peers))
 	for i, peer := range peers {
@@ -123,6 +125,7 @@ func SystemShow(c *gin.Context) {
 // @Param name path string true "System name"
 // @Param page query int false "Page number" default(1)
 // @Param per_page query int false "Items per page" default(10)
+// @Param order query string false "Order" default("desc")
 // @Produce json
 // @Success 200 {object} models.SystemInfo "System information"
 // @Failure 400 {object} gin.H "Invalid page number" "Invalid per page number"
@@ -132,6 +135,7 @@ func SystemShowBasedOnUsage(c *gin.Context) {
 	name := c.Param("name")
 	page := c.DefaultQuery("page", "1")
 	perPage := c.DefaultQuery("per_page", "10")
+	order := c.DefaultQuery("order", "desc")
 	pageNum, err := strconv.Atoi(page)
 	if err != nil {
 		c.JSON(400, gin.H{"error": "Invalid page number"})
@@ -151,7 +155,7 @@ func SystemShowBasedOnUsage(c *gin.Context) {
 		return
 	}
 	var peers []models.Peer
-	initializers.DB.Model(&models.Peer{}).Where("system_id = ?", systemID).Order("usage desc").Offset(startIdx).Limit(perPageNum).Find(&peers)
+	initializers.DB.Model(&models.Peer{}).Where("system_id = ?", systemID).Order("usage " + order).Offset(startIdx).Limit(perPageNum).Find(&peers)
 	peersInfo := make([]models.PeerInfo, len(peers))
 	for i, peer := range peers {
 		peersInfo[i].Name = peer.Name

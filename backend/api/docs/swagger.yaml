@@ -423,6 +423,11 @@ paths:
         in: query
         name: per_page
         type: integer
+      - default: '"asc"'
+        description: Order
+        in: query
+        name: order
+        type: string
       produces:
       - application/json
       responses:
@@ -436,6 +441,29 @@ paths:
           schema:
             $ref: '#/definitions/gin.H'
       summary: System Show
+      tags:
+      - Systems
+  /systems/{name}/add_usage:
+    put:
+      description: Adds usage to last usage for all peers of a system.
+      parameters:
+      - description: System name
+        in: path
+        name: name
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Usage added to last usage
+          schema:
+            $ref: '#/definitions/gin.H'
+        "404":
+          description: System not found
+          schema:
+            $ref: '#/definitions/gin.H'
+      summary: Adds usage to last usage
       tags:
       - Systems
   /systems/{name}/peers:
@@ -515,6 +543,11 @@ paths:
         in: query
         name: per_page
         type: integer
+      - default: '"desc"'
+        description: Order
+        in: query
+        name: order
+        type: string
       produces:
       - application/json
       responses:
