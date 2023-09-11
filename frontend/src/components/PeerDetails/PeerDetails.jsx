@@ -71,7 +71,7 @@ function NewPeer() {
 			theme: 'dark',
 			progressStyle: { backgroundColor: '#0ea5e9' },
 			onOpen: () => {
-				dispatch(getSystemInfosFromServer(systemName));
+				dispatch(getSystemInfosFromServer({systemName}));
 				setTimeout(() => {
 					// navigate to panel
 					closeModalHandler();

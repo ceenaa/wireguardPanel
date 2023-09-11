@@ -1,52 +1,57 @@
 // react
-import React, { useState } from 'react';
+import React from 'react';
 
-// packages
+// icons
 import { BiChevronDown, BiChevronUp } from 'react-icons/bi';
+import { AiOutlineApi } from 'react-icons/ai';
+import { PiPlugsConnectedLight } from 'react-icons/pi';
+import { MdWifiTethering } from 'react-icons/md';
+
+// redux
+import { useDispatch, useSelector } from 'react-redux';
+import { setStatus } from '../../services/Redux/Slices/Status';
+import { setSort } from '../../services/Redux/Slices/Sort';
 
 // components
 import PeersTableItem from '../PeersTableItem/PeersTableItem';
-import { useDispatch, useSelector } from 'react-redux';
-import { searchByStatus } from '../../services/Redux/Slices/Sort';
 
 // peers table
 function PeersTable({ peers }) {
 	// redux dispatch hook
 	const dispatch = useDispatch();
 
-	// sort helper
-	const [currentFilter, setCurrentFilter] = useState('');
+	// status plan
+	let status = useSelector((state) => state.status);
 
-	// filter handler
-	const filterHandler = (type) => {
-		if (currentFilter === type) {
-			dispatch(searchByStatus(`REVERSED - ${type}`));
-			setCurrentFilter(`REVERSED - ${type}`);
-		} else {
-			dispatch(searchByStatus(type));
-			setCurrentFilter(type);
-		}
+	// sort plan
+	let sort = useSelector((state) => state.sort);
+
+	// change status plan when clicking status button
+	const statusHandler = (e) => {
+		e.stopPropagation();
+
+		if (status.count === 0) dispatch(setStatus({ value: 'enable', count: 1 }));
+		else if (status.count === 1) dispatch(setStatus({ value: 'disable', count: 2 }));
+		else if (status.count === 2) dispatch(setStatus({ value: '', count: 0 }));
 	};
 
-	// filter peers
-	const filteredPeers = peers.filter((peer) =>
-		peer.Name.includes(useSelector((state) => state.search))
-	);
+	// change sort plan when clicking status tr
+	const expireDateHandler = () => {
+		if (sort.value === 'usage') dispatch(setSort({ value: 'expire_date', order: 'asc' }));
+		else if (sort.value === 'expire_date' && sort.order === 'asc')
+			dispatch(setSort({ value: 'expire_date', order: 'desc' }));
+		else if (sort.value === 'expire_date' && sort.order === 'desc')
+			dispatch(setSort({ value: 'expire_date', order: 'asc' }));
+	};
 
-	// sorted peers initializing
-	let sortedPeers = filteredPeers;
-
-	// sort filter
-	let sortPlan = useSelector((state) => state.sort);
-
-	// sorting handler
-	if (sortPlan === 'STATUS') sortedPeers = filteredPeers.filter((peer) => peer.IsActive);
-	else if (sortPlan === 'REVERSED - STATUS')
-		sortedPeers = filteredPeers.filter((peer) => !peer.IsActive);
-	else if (sortPlan === 'DATA')
-		sortedPeers = filteredPeers.sort((peer1, peer2) => peer1.Usage - peer2.Usage);
-	else if (sortPlan === 'REVERSED - DATA')
-		sortedPeers = filteredPeers.sort((peer1, peer2) => peer2.Usage - peer1.Usage);
+	// change sort plan when clicking data usage tr
+	const usageHandler = () => {
+		if (sort.value === 'expire_date') dispatch(setSort({ value: 'usage', order: 'asc' }));
+		else if (sort.value === 'usage' && sort.order === 'asc')
+			dispatch(setSort({ value: 'usage', order: 'desc' }));
+		else if (sort.value === 'usage' && sort.order === 'desc')
+			dispatch(setSort({ value: 'expire_date', order: 'asc' }));
+	};
 
 	// jsx
 	return (
@@ -55,45 +60,65 @@ function PeersTable({ peers }) {
 				<tr className="child:font-Lalezar child:text-3xl child:leading-[72px]">
 					<th className="rounded-tl-3xl">User Name</th>
 					<th
-						className={`relative w-[400px] cursor-pointer select-none transition-all hover:bg-slate-800 hover:shadow-box child:opacity-0 child:transition-all child:delay-100 child:hover:block child:hover:opacity-100 ${
-							(sortPlan === 'STATUS') | (sortPlan === 'REVERSED - STATUS')
-								? 'bg-slate-800 shadow-box child:block child:opacity-100'
-								: ''
+						className={`relative w-[400px] cursor-pointer select-none transition-all hover:shadow-box child:transition-all child:delay-100 child:hover:block child:hover:opacity-100 ${
+							sort.value === 'expire_date' ? 'bg-slate-800' : ''
 						}`}
-						onClick={() => filterHandler('STATUS')}
+						onClick={expireDateHandler}
 					>
 						Status
+						<div className="absolute left-[90px] top-4">
+							{status.value === 'disable' ? (
+								<div
+									className="flex h-[40px] w-[40px] items-center justify-center rounded-lg bg-slate-700 shadow-box transition-all"
+									onClick={(e) => statusHandler(e)}
+								>
+									<AiOutlineApi className="h-8 w-8 rounded-xl text-red-500" />
+								</div>
+							) : status.value === 'enable' ? (
+								<div
+									className="flex h-[40px] w-[40px] items-center justify-center rounded-lg bg-slate-700 shadow-box transition-all"
+									onClick={statusHandler}
+								>
+									<PiPlugsConnectedLight className="h-8 w-8 rounded-xl text-green-500" />
+								</div>
+							) : status.value === '' ? (
+								<div
+									className="flex h-[40px] w-[40px] items-center justify-center rounded-lg bg-slate-700 transition-all hover:shadow-box"
+									onClick={statusHandler}
+								>
+									<MdWifiTethering className="h-8 w-8 rounded-xl text-slate-400" />
+								</div>
+							) : null}
+						</div>
 						<div className="absolute right-[120px] top-4">
-							{sortPlan === 'REVERSED - STATUS' ? (
-								<BiChevronUp className="h-9 w-9 text-slate-400" />
-							) : (
+							{sort.value === 'expire_date' && sort.order === 'asc' ? (
 								<BiChevronDown className="h-9 w-9 text-slate-400" />
-							)}
+							) : sort.value === 'expire_date' && sort.order === 'desc' ? (
+								<BiChevronUp className="h-9 w-9 text-slate-400" />
+							) : null}
 						</div>
 					</th>
 					<th
-						className={`relative w-[440px] cursor-pointer select-none transition-all hover:bg-slate-800 hover:shadow-box child:opacity-0 child:transition-all child:delay-100 child:hover:block child:hover:opacity-100 ${
-							(sortPlan === 'DATA') | (sortPlan === 'REVERSED - DATA')
-								? 'bg-slate-800 shadow-box child:block child:opacity-100'
-								: ''
+						className={`relative w-[440px] cursor-pointer select-none transition-all child:transition-all child:delay-100 child:hover:block child:hover:opacity-100 ${
+							sort.value === 'usage' ? 'bg-slate-800' : ''
 						}`}
-						onClick={() => filterHandler('DATA')}
+						onClick={usageHandler}
 					>
 						Data Usage
 						<div className="absolute right-[120px] top-4">
-							{sortPlan === 'REVERSED - DATA' ? (
-								<BiChevronUp className="h-9 w-9 text-slate-400" />
-							) : (
+							{sort.value === 'usage' && sort.order === 'asc' ? (
 								<BiChevronDown className="h-9 w-9 text-slate-400" />
-							)}
+							) : sort.value === 'usage' && sort.order === 'desc' ? (
+								<BiChevronUp className="h-9 w-9 text-slate-400" />
+							) : null}
 						</div>
 					</th>
 					<th className="w-[190px] rounded-tr-3xl"></th>
 				</tr>
 			</thead>
 			<tbody className="divide-y-2 divide-sky-700">
-				{sortedPeers.length ? (
-					sortedPeers.map((peer, index) => (
+				{peers.length ? (
+					peers.map((peer, index) => (
 						<PeersTableItem
 							key={index}
 							peerName={peer.Name}

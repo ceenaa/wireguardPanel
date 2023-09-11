@@ -4,7 +4,8 @@ import { getSystemInfos } from '../../Axios/Requests/System/systemInfos';
 // GET system infos
 export const getSystemInfosFromServer = createAsyncThunk(
 	'system/getSystemInfosFromServer',
-	async (SystemName) => getSystemInfos(SystemName)
+	async ({ systemName, page, perPage, order, sortBy, status, peerName }) =>
+		getSystemInfos(systemName, page, perPage, order, sortBy, status, peerName)
 );
 
 // system slice

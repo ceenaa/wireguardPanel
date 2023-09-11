@@ -21,8 +21,8 @@ const routes = [
 		children: [
 			{ path: 'system', element: <SystemList /> },
 			{ path: 'new-peer', element: <NewPeer /> },
-			{ path: 'peer/:peerName', element: <PeerDetails /> },
-			{ path: 'peer/:peerName/qrcode', element: <PeerQRCode /> }
+			{ path: ':peerName', element: <PeerDetails /> },
+			{ path: ':peerName/qrcode', element: <PeerQRCode /> }
 		]
 	},
 	{ path: '/login', element: <Login /> }

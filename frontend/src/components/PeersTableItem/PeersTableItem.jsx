@@ -33,16 +33,19 @@ function PeersTableItem({ peerName, isActive, remainingDays, remainingUsage, dat
 
 	// jsx
 	return (
-		<tr className="h-[114px] divide-x-2 divide-slate-300 text-center text-2xl leading-[114px]">
+		<tr className="group h-[114px] cursor-pointer divide-x-2 divide-slate-300 text-center text-2xl leading-[114px] shadow-blue-500 transition-all hover:bg-slate-500/20 hover:shadow-box">
 			{/* User Name */}
 			<td
-				className="cursor-pointer px-5 font-bold text-slate-50 shadow-blue-500 transition-all hover:text-blue-500 hover:shadow-box"
-				onClick={() => navigate(`peer/${peerName}`)}
+				className="cursor-pointer px-5 font-bold text-slate-50 transition-all group-hover:text-blue-500"
+				onClick={() => navigate(`${peerName}`)}
 			>
 				<span>{peerName}</span>
 			</td>
 			{/* Status  */}
-			<td className="flex h-[114px] items-center justify-between p-5">
+			<td
+				className="flex h-[114px] items-center justify-between p-5"
+				onClick={() => navigate(`${peerName}`)}
+			>
 				<div
 					className={`flex items-center gap-x-2 ${isActive ? 'text-green-500' : 'text-red-500'}`}
 				>
@@ -58,7 +61,7 @@ function PeersTableItem({ peerName, isActive, remainingDays, remainingUsage, dat
 				</span>
 			</td>
 			{/* Data Usage   */}
-			<td className="p-5 leading-none">
+			<td className="p-5 leading-none" onClick={() => navigate(`${peerName}`)}>
 				<div className="relative ml-4 mt-3 flex flex-col justify-center gap-y-2">
 					<span className="h-[10px] w-[400px] rounded-full bg-slate-200"></span>
 					<span
@@ -82,7 +85,7 @@ function PeersTableItem({ peerName, isActive, remainingDays, remainingUsage, dat
 				<div className="flex items-center justify-between gap-x-[60px]">
 					<button
 						className="flex h-[50px] w-[50px] items-center justify-center rounded-lg transition-all hover:bg-slate-700 hover:shadow-box"
-						onClick={() => navigate(`peer/${peerName}/qrcode`)}
+						onClick={() => navigate(`${peerName}/qrcode`)}
 					>
 						<IoQrCodeSharp className="h-9 w-9 text-slate-400 " />
 					</button>

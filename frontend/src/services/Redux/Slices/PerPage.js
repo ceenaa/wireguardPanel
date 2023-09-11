@@ -1,15 +1,15 @@
 import { createSlice } from '@reduxjs/toolkit';
 
-// search slice
+// perPage slice
 const slice = createSlice({
-	name: 'search',
-	initialState: '',
+	name: 'page',
+	initialState: 10,
 	reducers: {
-		setSearch: (state, action) => action.payload
+		setPage: (state, action) => action.payload
 	},
 	extraReducers: {}
 });
 
 // exports
-export const { setSearch } = slice.actions;
+export const { setPage } = slice.actions;
 export default slice.reducer;

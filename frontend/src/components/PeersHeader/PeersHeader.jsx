@@ -1,5 +1,6 @@
+import { useRef } from 'react';
 // react
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 // icons
@@ -9,8 +10,9 @@ import { BiSearchAlt } from 'react-icons/bi';
 // redux
 import { useDispatch, useSelector } from 'react-redux';
 import { getSystemInfosFromServer } from '../../services/Redux/Slices/System';
-import { searchByName } from '../../services/Redux/Slices/Search';
-import { searchByStatus } from '../../services/Redux/Slices/Sort';
+import { setSearch } from '../../services/Redux/Slices/search';
+import { setSort } from '../../services/Redux/Slices/Sort';
+import { setStatus } from '../../services/Redux/Slices/Status';
 
 // peers header
 function PeersHeader() {
@@ -26,17 +28,25 @@ function PeersHeader() {
 	// refresh button handler
 	const refreshHandler = () => {
 		// reload system
-		dispatch(getSystemInfosFromServer(systemName));
+		dispatch(getSystemInfosFromServer({ systemName }));
 
-		// reload search bar
-		dispatch(searchByName(''));
+		// reload search input
+		dispatch(setSearch(''));
 
-		// disable sorts
-		dispatch(searchByStatus(''));
+		// reload sort filter
+		dispatch(setSort({ value: 'expire_date', order: 'asc' }));
+
+		// reload status filter
+		dispatch(setStatus({ value: '', count: 0 }));
 	};
 
-	// automatic refresh system
-	setTimeout(() => dispatch(getSystemInfosFromServer(systemName)), 5 * 60 * 1000);
+	// search input reference
+	const searchInput = useRef();
+
+	// focus on input when mounting
+	useEffect(() => {
+		searchInput.current.focus();
+	}, []);
 
 	// jsx
 	return (
@@ -44,11 +54,12 @@ function PeersHeader() {
 			<div className="relative">
 				{/* search bar */}
 				<input
+					ref={searchInput}
 					type="search"
 					className=" h-[50px] w-[400px] rounded-3xl border-none bg-slate-900 pl-16 pr-5 text-xl text-slate-100 outline-none placeholder:text-xl placeholder:text-slate-100/50 focus:shadow-box2"
 					placeholder="Search"
-					onChange={(e) => dispatch(searchByName(e.target.value))}
 					value={useSelector((state) => state.search)}
+					onChange={(e) => dispatch(setSearch(e.target.value))}
 				/>
 				<BiSearchAlt className="absolute left-5 top-2 h-9 w-9 text-slate-300" />
 			</div>
