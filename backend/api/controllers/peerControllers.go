@@ -270,34 +270,6 @@ func PeerShowConfig(c *gin.Context) {
 	c.File(file)
 }
 
-// PeerShowQR godoc
-// @Summary Get a peer's QR code
-// @Description Retrieve a peer's QR code by name.
-// @Param name path string true "Peer name"
-// @Tags Peers
-// @Produce png
-// @Success 200 {object} string "Peer QR code"
-// @Failure 404 {object} gin.H "Peer not found" "System not found"
-// @Router /peers/{name}/qr [get]
-func PeerShowQR(c *gin.Context) {
-	name := c.Param("name")
-	var peer models.Peer
-	initializers.DB.Where("name = ?", name).First(&peer)
-	if peer.ID == 0 {
-		c.JSON(404, gin.H{"error": "Peer not found"})
-		return
-	}
-	var system models.System
-	initializers.DB.Where("id = ?", peer.SystemID).First(&system)
-	if system.ID == 0 {
-		c.JSON(404, gin.H{"error": "System not found"})
-		return
-	}
-	file := fmt.Sprintf("../../configs/%s/%s.png", system.Name, name)
-	c.Header("Content-Type", "image/png")
-	c.File(file)
-}
-
 // TestPeerPause godoc
 // @Summary Pause a peer
 // @Description Pause a peer by name.

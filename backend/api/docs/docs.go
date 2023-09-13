@@ -253,41 +253,6 @@ const docTemplate = `{
                 }
             }
         },
-        "/peers/{name}/qr": {
-            "get": {
-                "description": "Retrieve a peer's QR code by name.",
-                "produces": [
-                    "image/png"
-                ],
-                "tags": [
-                    "Peers"
-                ],
-                "summary": "Get a peer's QR code",
-                "parameters": [
-                    {
-                        "type": "string",
-                        "description": "Peer name",
-                        "name": "name",
-                        "in": "path",
-                        "required": true
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "Peer QR code",
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    "404": {
-                        "description": "Peer not found\" \"System not found",
-                        "schema": {
-                            "$ref": "#/definitions/gin.H"
-                        }
-                    }
-                }
-            }
-        },
         "/peers/{name}/reset": {
             "put": {
                 "description": "Reset a peer's usage by name.",

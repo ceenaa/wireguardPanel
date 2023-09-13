@@ -41,7 +41,6 @@ func main() {
 
 	r.GET("/peers/:name", middleware.RequireAuth, controllers.PeerShow)
 	r.GET("/peers/:name/conf", middleware.RequireAuth, controllers.PeerShowConfig)
-	r.GET("/peers/:name/qr", middleware.RequireAuth, controllers.PeerShowQR)
 	r.PUT("/peers/:name/reset", middleware.RequireAuth, controllers.PeerResetUsage)
 	r.PUT("/peers/:name", middleware.RequireAuth, controllers.PeerUpdate)
 
