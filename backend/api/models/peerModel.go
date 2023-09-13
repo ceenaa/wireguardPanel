@@ -24,10 +24,13 @@ type Peer struct {
 }
 
 type PeerInfo struct {
+	ID         uint `json:"-"`
 	Name       string
+	Phone      string
 	Usage      float32
 	DataLimit  float32
-	IsActive   bool
 	BuyDate    string
 	ExpireDate string
+	IsActive   bool
+	SystemID   uint `json:"-"`
 }

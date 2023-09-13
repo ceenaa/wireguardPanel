@@ -7,6 +7,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"math/rand"
 	"net/http"
+	"os"
 	"strconv"
 )
 
@@ -37,7 +38,11 @@ func SystemCreate(c *gin.Context) {
 		StartedDate: body.StartedDate,
 		PublicKey:   "sample_Data",
 	})
-
+	err := os.Mkdir("../../configs/"+body.Name, 0755)
+	if err != nil {
+		c.JSON(400, gin.H{"error": "System not created"})
+		return
+	}
 	c.JSON(200, gin.H{"message": "System created"})
 }
 
@@ -101,18 +106,13 @@ func SystemShow(c *gin.Context) {
 	}
 	startIdx := (pageNum - 1) * perPageNum
 
-	var system models.System
+	var system models.SystemInfo
 	initializers.DB.Model(&models.System{}).Where("name = ?", name).First(&system)
 	if system.ID == 0 {
 		c.JSON(404, gin.H{"error": "System not found"})
 		return
 	}
-	var systemInfo models.SystemInfo
-	systemInfo.Name = system.Name
-	systemInfo.StartedDate = system.StartedDate
-	systemInfo.TotalUsage = system.TotalUsage
-
-	var peers []models.Peer
+	var peers []models.PeerInfo
 
 	if status == "" {
 		initializers.DB.Model(&models.Peer{}).Where("system_id = ?", system.ID).Where("name LIKE ?", "%"+peerName+"%").Order(sortBy + " " + order).Offset(startIdx).Limit(perPageNum).Find(&peers)
@@ -124,25 +124,18 @@ func SystemShow(c *gin.Context) {
 		initializers.DB.Model(&models.Peer{}).Where("system_id = ?", system.ID).Where("is_active = ?", false).Where("name LIKE ?", "%"+peerName+"%").Order(sortBy + " " + order).Offset(startIdx).Limit(perPageNum).Find(&peers)
 	}
 
-	var activeUsers int = 0
-	peersInfo := make([]models.PeerInfo, len(peers))
-	for i, peer := range peers {
-		peersInfo[i].Name = peer.Name
-		peersInfo[i].Usage = peer.Usage
-		peersInfo[i].DataLimit = peer.DataLimit
-		peersInfo[i].BuyDate = peer.BuyDate
-		peersInfo[i].ExpireDate = peer.ExpireDate
-		peersInfo[i].IsActive = peer.IsActive
-		if peer.IsActive == true {
-			activeUsers++
+	activePeers := 0
+	for _, peer := range peers {
+		if peer.IsActive {
+			activePeers++
 		}
-
 	}
-	systemInfo.ActivePeersCount = activeUsers
-	systemInfo.AllPeersCount = len(peers)
-	systemInfo.Peers = peersInfo
+	system.Peers = peers
+	system.ActivePeersCount = activePeers
+	system.AllPeersCount = len(peers)
 
-	c.JSON(200, systemInfo)
+	c.JSON(200, system)
+
 }
 
 type systemCreatePeerBody struct {
