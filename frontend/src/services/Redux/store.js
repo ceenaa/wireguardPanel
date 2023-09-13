@@ -6,7 +6,7 @@ import System from './Slices/System';
 import Peers from './Slices/Peers';
 import Status from './Slices/Status';
 import Sort from './Slices/Sort';
-import search from './Slices/search';
+import search from './Slices/Search';
 import Page from './Slices/Page';
 import PerPage from './Slices/PerPage';
 
