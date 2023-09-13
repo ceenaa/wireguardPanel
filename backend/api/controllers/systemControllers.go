@@ -113,26 +113,23 @@ func SystemShow(c *gin.Context) {
 		return
 	}
 	var peers []models.PeerInfo
+	var AllPeersCount int64
+	var activePeers int64
 
 	if status == "" {
-		initializers.DB.Model(&models.Peer{}).Where("system_id = ?", system.ID).Where("name LIKE ?", "%"+peerName+"%").Order(sortBy + " " + order).Offset(startIdx).Limit(perPageNum).Find(&peers)
+		initializers.DB.Model(&models.Peer{}).Where("system_id = ?", system.ID).Where("name LIKE ?", "%"+peerName+"%").Order(sortBy + " " + order).Count(&AllPeersCount).Offset(startIdx).Limit(perPageNum).Find(&peers)
+		initializers.DB.Model(&models.Peer{}).Where("system_id = ?", system.ID).Where("name LIKE ?", "%"+peerName+"%").Where("is_active = ?", true).Count(&activePeers)
 
 	} else if status == "enable" {
-		initializers.DB.Model(&models.Peer{}).Where("system_id = ?", system.ID).Where("is_active = ?", true).Where("name LIKE ?", "%"+peerName+"%").Order(sortBy + " " + order).Offset(startIdx).Limit(perPageNum).Find(&peers)
+		initializers.DB.Model(&models.Peer{}).Where("system_id = ?", system.ID).Where("is_active = ?", true).Where("name LIKE ?", "%"+peerName+"%").Count(&activePeers).Order(sortBy + " " + order).Count(&AllPeersCount).Offset(startIdx).Limit(perPageNum).Find(&peers).Count(&AllPeersCount)
 
 	} else {
-		initializers.DB.Model(&models.Peer{}).Where("system_id = ?", system.ID).Where("is_active = ?", false).Where("name LIKE ?", "%"+peerName+"%").Order(sortBy + " " + order).Offset(startIdx).Limit(perPageNum).Find(&peers)
-	}
-
-	activePeers := 0
-	for _, peer := range peers {
-		if peer.IsActive {
-			activePeers++
-		}
+		initializers.DB.Model(&models.Peer{}).Where("system_id = ?", system.ID).Where("is_active = ?", false).Where("name LIKE ?", "%"+peerName+"%").Count(&activePeers).Order(sortBy + " " + order).Count(&AllPeersCount).Offset(startIdx).Limit(perPageNum).Find(&peers).Count(&AllPeersCount)
+		activePeers = AllPeersCount - activePeers
 	}
 	system.Peers = peers
 	system.ActivePeersCount = activePeers
-	system.AllPeersCount = len(peers)
+	system.AllPeersCount = AllPeersCount
 
 	c.JSON(200, system)
 

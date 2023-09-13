@@ -17,6 +17,6 @@ type SystemInfo struct {
 	StartedDate      string
 	TotalUsage       float32
 	Peers            []PeerInfo `gorm:"foreignKey:SystemID"`
-	AllPeersCount    int        `gorm:"-"`
-	ActivePeersCount int        `gorm:"-"`
+	AllPeersCount    int64      `gorm:"-"`
+	ActivePeersCount int64      `gorm:"-"`
 }
