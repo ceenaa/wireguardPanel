@@ -26,6 +26,7 @@ function PeerPagination({ allPeers, activePeers, deActivePeers }) {
 				<select
 					className="h-[50px] w-[50px] appearance-none rounded-xl bg-slate-700 text-center font-Lalezar text-xl tracking-wider outline-none transition-colors hover:bg-slate-600 hover:shadow-box"
 					onChange={(e) => dispatch(setPage(e.target.value))}
+					value={useSelector((state) => state.perPage)}
 				>
 					<option value="10">10</option>
 					<option value="20">20</option>

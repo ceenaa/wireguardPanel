@@ -13,6 +13,7 @@ import { getSystemInfosFromServer } from '../../services/Redux/Slices/System';
 import { setSearch } from '../../services/Redux/Slices/search';
 import { setSort } from '../../services/Redux/Slices/Sort';
 import { setStatus } from '../../services/Redux/Slices/Status';
+import { postSystemReload } from '../../services/Axios/Requests/System/systemReload';
 
 // peers header
 function PeersHeader() {
@@ -27,17 +28,20 @@ function PeersHeader() {
 
 	// refresh button handler
 	const refreshHandler = () => {
-		// reload system
-		dispatch(getSystemInfosFromServer({ systemName }));
+		// POST system reload
+		postSystemReload(systemName).then(() => {
+			// reload system
+			dispatch(getSystemInfosFromServer({ systemName }));
 
-		// reload search input
-		dispatch(setSearch(''));
+			// reload search input
+			dispatch(setSearch(''));
 
-		// reload sort filter
-		dispatch(setSort({ value: 'expire_date', order: 'asc' }));
+			// reload sort filter
+			dispatch(setSort({ value: 'expire_date', order: 'asc' }));
 
-		// reload status filter
-		dispatch(setStatus({ value: '', count: 0 }));
+			// reload status filter
+			dispatch(setStatus({ value: '', count: 0 }));
+		});
 	};
 
 	// search input reference

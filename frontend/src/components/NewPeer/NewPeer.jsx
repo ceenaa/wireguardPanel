@@ -170,28 +170,28 @@ function NewPeer() {
 							<div className="flex h-[50px] w-[50px] items-center justify-center rounded-full bg-slate-700 p-[7px]">
 								<AiFillApi className="h-5 w-5 text-slate-300" />
 							</div>
-							<textarea
+							<input
 								placeholder="Allowed IP"
 								className={`w-[500px] rounded-3xl bg-slate-700 px-5 pt-2 text-xl font-bold tracking-tight text-slate-50 outline-none placeholder:tracking-tight placeholder:text-slate-300 focus:shadow-box ${
 									errors.allowed_ip ? 'shadow-md shadow-red-500/75' : ''
 								}`}
 								{...register('allowed_ip')}
 								rows="3"
-							></textarea>
+							></input>
 						</div>
 						{/* config end point */}
 						<div className="flex gap-x-4">
 							<div className="flex h-[50px] w-[50px] items-center justify-center rounded-full bg-slate-700 p-[7px]">
 								<TbAccessPoint className="h-5 w-5 text-slate-300" />
 							</div>
-							<textarea
+							<input
 								placeholder="Config End Point"
 								className={`w-[500px] rounded-3xl bg-slate-700 px-5 pt-2 text-xl font-bold tracking-tight text-slate-50 outline-none placeholder:tracking-tight placeholder:text-slate-300 focus:shadow-box ${
 									errors.allowed_ip ? 'shadow-md shadow-red-500/75' : ''
 								}`}
 								{...register('config_end_point')}
 								rows="3"
-							></textarea>
+							></input>
 						</div>
 						{/* data limit */}
 						<div className="flex gap-x-4">
