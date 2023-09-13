@@ -10,7 +10,7 @@ import { BiSearchAlt } from 'react-icons/bi';
 // redux
 import { useDispatch, useSelector } from 'react-redux';
 import { getSystemInfosFromServer } from '../../services/Redux/Slices/System';
-import { setSearch } from '../../services/Redux/Slices/search';
+import { setSearch } from '../../services/Redux/Slices/Search';
 import { setSort } from '../../services/Redux/Slices/Sort';
 import { setStatus } from '../../services/Redux/Slices/Status';
 import { postSystemReload } from '../../services/Axios/Requests/System/systemReload';
