@@ -3,7 +3,7 @@ import React, { useEffect, useState } from 'react';
 
 // components
 import { userValidate } from '../../services/Axios/Requests/User/userValidate';
-import { Navigate, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
 // panel private route
 function PanelPrivateRoute({ children }) {

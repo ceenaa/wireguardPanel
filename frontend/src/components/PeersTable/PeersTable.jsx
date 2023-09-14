@@ -12,6 +12,9 @@ import { useDispatch, useSelector } from 'react-redux';
 import { setStatus } from '../../services/Redux/Slices/Status';
 import { setSort } from '../../services/Redux/Slices/Sort';
 
+// moment js
+import moment from 'moment';
+
 // components
 import PeersTableItem from '../PeersTableItem/PeersTableItem';
 
@@ -123,9 +126,7 @@ function PeersTable({ peers }) {
 							key={index}
 							peerName={peer.Name}
 							isActive={peer.IsActive}
-							remainingDays={Math.floor(
-								Math.abs(new Date() - new Date(peer.ExpireDate)) / 1000 / 60 / 60 / 24
-							)}
+							remainingDays={moment(peer.ExpireDate).diff(moment().format('YYYY-MM-DD'), 'days')}
 							dataLimit={peer.DataLimit}
 							remainingUsage={peer.Usage}
 						/>
