@@ -5,9 +5,11 @@ import (
 	_ "api/docs"
 	"api/initializers"
 	"api/middleware"
+	"api/wireguard"
 	"github.com/gin-gonic/gin"
 	"github.com/swaggo/files"
 	"github.com/swaggo/gin-swagger"
+	"log"
 )
 
 func init() {
@@ -54,6 +56,13 @@ func main() {
 	r.PUT("/test/peers/:name/pause", middleware.RequireAuth, controllers.TestPeerPause)
 	r.PUT("/test/peers/:name/resume", middleware.RequireAuth, controllers.TestPeerResume)
 	r.PUT("/test/peers/:name/reset", middleware.RequireAuth, controllers.TestPeerResetUsage)
+
+	go func() {
+		output, err := wireguard.AutoReloadAndPause()
+		if err != nil {
+			log.Println(output, err)
+		}
+	}()
 
 	r.Run()
 }
