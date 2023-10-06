@@ -136,10 +136,14 @@ func Logout(c *gin.Context) {
 // @Description Check if the user is logged in and the session is valid.
 // @Tags Authentication
 // @Produce json
-// @Success 200 {string} string "User is logged in"
+// @Success 200 {string} string "User logged in" {string} string "User role"
 // @Router /validate [get]
 func Validate(c *gin.Context) {
+	var user models.User
+	user = c.MustGet("user").(models.User)
+
 	c.JSON(http.StatusOK, gin.H{
 		"message": "Im logged in",
+		"role":    user.Role,
 	})
 }
