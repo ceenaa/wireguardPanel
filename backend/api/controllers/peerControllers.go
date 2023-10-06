@@ -6,6 +6,8 @@ import (
 	"api/wireguard"
 	"fmt"
 	"github.com/gin-gonic/gin"
+	"log"
+	"os"
 )
 
 // PeerShow godoc
@@ -20,7 +22,7 @@ import (
 func PeerShow(c *gin.Context) {
 	name := c.Param("name")
 	var peer models.Peer
-	initializers.DB.Where("name = ?", name).First(&peer)
+	initializers.DB.Model(&models.Peer{}).Where("name = ?", name).First(&peer)
 	if peer.ID == 0 {
 		c.JSON(404, gin.H{"error": "Peer not found"})
 		return
@@ -102,9 +104,9 @@ func PeerDelete(c *gin.Context) {
 	}
 	var message string
 	var err error
+	var system models.System
+	initializers.DB.Where("id = ?", peer.SystemID).First(&system)
 	if peer.IsActive {
-		var system models.System
-		initializers.DB.Where("id = ?", peer.SystemID).First(&system)
 		if system.ID == 0 {
 			c.JSON(404, gin.H{"error": "System not found"})
 			return
@@ -116,6 +118,13 @@ func PeerDelete(c *gin.Context) {
 		}
 	}
 	initializers.DB.Unscoped().Delete(&peer)
+	err = os.Remove(fmt.Sprintf("../../configs/%s/%s.conf", system.Name, peer.Name))
+	if err != nil {
+		return
+	}
+	if err != nil {
+		log.Println(err)
+	}
 	c.JSON(200, gin.H{"message": "Peer deleted", "wireguard": message})
 }
 

@@ -21,6 +21,7 @@ type Peer struct {
 	ExpireDate     string  `gorm:"default:null" json:"expire_date"`
 	IsActive       bool    `gorm:"default:true" json:"is_active"`
 	SystemID       uint    `json:"-"`
+	UserID         uint    `json:"-"`
 }
 
 type PeerInfo struct {
@@ -33,4 +34,5 @@ type PeerInfo struct {
 	ExpireDate string
 	IsActive   bool
 	SystemID   uint `json:"-"`
+	UserID     uint `json:"-"`
 }

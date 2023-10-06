@@ -44,7 +44,7 @@ func PauseExpiredTime() (string, error) {
 
 func PauseExpiredUsage() (string, error) {
 	var ExpiredPeers []models.Peer
-	initializers.DB.Where("usage >= max_usage").Find(&ExpiredPeers)
+	initializers.DB.Where("usage >= data_limit").Find(&ExpiredPeers)
 
 	for _, peer := range ExpiredPeers {
 		output, err := pause(peer)

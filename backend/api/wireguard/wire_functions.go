@@ -175,11 +175,4 @@ func GenerateConfigFiles(name string, systemName string, serverPublicKey string,
 	file.WriteString("PresharedKey = " + preSharedKey + "\n")
 	file.Close()
 
-	cmd := exec.Command("qrencode", "-t", "png", "-o", fmt.Sprintf("../../configs/%s/%s.png", systemName, name), "-r", fmt.Sprintf("../../configs/%s/%s.conf", systemName, name))
-	// Run the command
-	err = cmd.Run()
-	if err != nil {
-		fmt.Printf("Error executing command: %v\n", err)
-	}
-
 }

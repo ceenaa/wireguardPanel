@@ -4,6 +4,15 @@ definitions:
     properties:
       password:
         type: string
+      role:
+        type: string
+      username:
+        type: string
+    type: object
+  controllers.UserLoginRequest:
+    properties:
+      password:
+        type: string
       username:
         type: string
     type: object
@@ -30,10 +39,13 @@ definitions:
     properties:
       name:
         type: string
+      publicKey:
+        type: string
       startedDate:
         type: string
     required:
     - name
+    - publicKey
     type: object
   controllers.systemCreatePeerBody:
     properties:
@@ -96,6 +108,8 @@ definitions:
         type: boolean
       name:
         type: string
+      phone:
+        type: string
       usage:
         type: number
     type: object
@@ -134,7 +148,7 @@ paths:
         name: body
         required: true
         schema:
-          $ref: '#/definitions/controllers.CreateUserRequest'
+          $ref: '#/definitions/controllers.UserLoginRequest'
       produces:
       - application/json
       responses:
