@@ -57,31 +57,33 @@ function Panel() {
 	let perPage = useSelector((state) => state.perPage);
 
 	useEffect(() => {
-		// GET system infos
-		dispatch(
-			getSystemInfosFromServer({
-				systemName: systemName,
-				page,
-				perPage,
-				order,
-				sortBy,
-				status,
-				peerName
-			})
-		);
+		systemName !== null
+			? // GET system infos
+			  dispatch(
+					getSystemInfosFromServer({
+						systemName: systemName,
+						page,
+						perPage,
+						order,
+						sortBy,
+						status,
+						peerName
+					})
+			  )
+			: navigate('/system');
 	}, [status, sortBy, order, peerName, page, perPage]);
 
 	// mounting side effects
 	useEffect(() => {
 		// check if system name is set
-		systemName === null ? navigate('/system') : null;
-
-		// GET system infos
-		dispatch(
-			getSystemInfosFromServer({
-				systemName: systemName
-			})
-		);
+		systemName === null
+			? navigate('/system')
+			: // GET system infos
+			  dispatch(
+					getSystemInfosFromServer({
+						systemName: systemName
+					})
+			  );
 	}, [systemName]);
 
 	// jsx
