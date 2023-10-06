@@ -14,6 +14,7 @@ import (
 type systemCreateBody struct {
 	Name        string `binding:"required"`
 	StartedDate string
+	PublicKey   string `binding:"required"`
 }
 
 // SystemCreate godoc
@@ -27,16 +28,22 @@ type systemCreateBody struct {
 // @Failure 400 {object} gin.H "Fields to read body"
 // @Router /systems [post]
 func SystemCreate(c *gin.Context) {
+	var user models.User
+	user = c.MustGet("user").(models.User)
+	if user.Role != "admin" {
+		c.JSON(403, gin.H{"error": "You are not admin"})
+	}
 	var body systemCreateBody
 	if c.Bind(&body) != nil {
 		c.JSON(400, gin.H{"error": "Fields to read body"})
 		return
 	}
+	os.Mkdir("../../configs/"+body.Name, 0755)
 
 	initializers.DB.Create(&models.System{
 		Name:        body.Name,
 		StartedDate: body.StartedDate,
-		PublicKey:   "sample_Data",
+		PublicKey:   body.PublicKey,
 	})
 	err := os.Mkdir("../../configs/"+body.Name, 0755)
 	if err != nil {
@@ -55,7 +62,16 @@ func SystemCreate(c *gin.Context) {
 // @Router /systems [get]
 func SystemsList(c *gin.Context) {
 	var systemNames []string
-	initializers.DB.Model(&models.System{}).Pluck("name", &systemNames)
+	var user models.User
+	user = c.MustGet("user").(models.User)
+	if user.Role == "admin" {
+		initializers.DB.Model(&models.System{}).Pluck("name", &systemNames)
+	} else {
+		var systemIds []uint
+		initializers.DB.Table("user_systems").Where("user_id = ?", user.ID).Pluck("system_id", &systemIds)
+		initializers.DB.Model(&models.System{}).Where("id IN ?", systemIds).Pluck("name", &systemNames)
+
+	}
 	c.JSON(200, systemNames)
 }
 
@@ -82,6 +98,9 @@ func SystemShow(c *gin.Context) {
 	sortBy := c.DefaultQuery("sort_by", "expire_date")
 	status := c.DefaultQuery("status", "")
 	peerName := c.DefaultQuery("peer_name", "")
+	var user models.User
+	user = c.MustGet("user").(models.User)
+
 	if status != "enable" && status != "disable" && status != "" {
 		c.JSON(400, gin.H{"error": "Invalid is active"})
 		return
@@ -115,16 +134,20 @@ func SystemShow(c *gin.Context) {
 	var peers []models.PeerInfo
 	var AllPeersCount int64
 	var activePeers int64
+	querySet := initializers.DB.Model(&models.Peer{}).Where("system_id = ?", system.ID)
+	if user.Role != "admin" {
+		querySet = querySet.Where("user_id = ?", user.ID)
+	}
 
 	if status == "" {
-		initializers.DB.Model(&models.Peer{}).Where("system_id = ?", system.ID).Where("name LIKE ?", "%"+peerName+"%").Order(sortBy + " " + order).Count(&AllPeersCount).Offset(startIdx).Limit(perPageNum).Find(&peers)
-		initializers.DB.Model(&models.Peer{}).Where("system_id = ?", system.ID).Where("name LIKE ?", "%"+peerName+"%").Where("is_active = ?", true).Count(&activePeers)
+		querySet.Where("name LIKE ?", "%"+peerName+"%").Order(sortBy + " " + order).Count(&AllPeersCount).Offset(startIdx).Limit(perPageNum).Find(&peers)
+		querySet.Where("name LIKE ?", "%"+peerName+"%").Where("is_active = ?", true).Count(&activePeers)
 
 	} else if status == "enable" {
-		initializers.DB.Model(&models.Peer{}).Where("system_id = ?", system.ID).Where("is_active = ?", true).Where("name LIKE ?", "%"+peerName+"%").Count(&activePeers).Order(sortBy + " " + order).Count(&AllPeersCount).Offset(startIdx).Limit(perPageNum).Find(&peers).Count(&AllPeersCount)
+		querySet.Where("is_active = ?", true).Where("name LIKE ?", "%"+peerName+"%").Count(&activePeers).Order(sortBy + " " + order).Count(&AllPeersCount).Offset(startIdx).Limit(perPageNum).Find(&peers).Count(&AllPeersCount)
 
 	} else {
-		initializers.DB.Model(&models.Peer{}).Where("system_id = ?", system.ID).Where("is_active = ?", false).Where("name LIKE ?", "%"+peerName+"%").Count(&activePeers).Order(sortBy + " " + order).Count(&AllPeersCount).Offset(startIdx).Limit(perPageNum).Find(&peers).Count(&AllPeersCount)
+		querySet.Where("is_active = ?", false).Where("name LIKE ?", "%"+peerName+"%").Count(&activePeers).Order(sortBy + " " + order).Count(&AllPeersCount).Offset(startIdx).Limit(perPageNum).Find(&peers).Count(&AllPeersCount)
 		activePeers = AllPeersCount - activePeers
 	}
 	system.Peers = peers
@@ -161,6 +184,9 @@ type systemCreatePeerBody struct {
 func SystemCreatePeer(c *gin.Context) {
 	name := c.Param("name")
 	var body systemCreatePeerBody
+	var user models.User
+	user = c.MustGet("user").(models.User)
+
 	if c.Bind(&body) != nil {
 		c.JSON(400, gin.H{"error": "Fields to read body"})
 		return
@@ -186,6 +212,7 @@ func SystemCreatePeer(c *gin.Context) {
 		BuyDate:        body.BuyDate,
 		ExpireDate:     body.ExpireDate,
 		SystemID:       system.ID,
+		UserID:         user.ID,
 	}
 	result := initializers.DB.Create(&peer)
 	if result.Error != nil {
@@ -264,6 +291,8 @@ func TestSystemReload(c *gin.Context) {
 // @Router /test/systems/{name}/peers [post]
 func TestSystemCreatePeer(c *gin.Context) {
 	name := c.Param("name")
+	var user models.User
+	user = c.MustGet("user").(models.User)
 	var body systemCreatePeerBody
 	if c.Bind(&body) != nil {
 		c.JSON(400, gin.H{"error": "Fields to read body"})
@@ -293,6 +322,7 @@ func TestSystemCreatePeer(c *gin.Context) {
 		BuyDate:        body.BuyDate,
 		ExpireDate:     body.ExpireDate,
 		SystemID:       system.ID,
+		UserID:         user.ID,
 	}
 	result := initializers.DB.Create(&peer)
 	if result.Error != nil {

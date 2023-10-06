@@ -14,6 +14,11 @@ import (
 type CreateUserRequest struct {
 	Username string `json:"username"`
 	Password string `json:"password"`
+	Role     string `json:"role"`
+}
+type UserLoginRequest struct {
+	Username string `json:"username"`
+	Password string `json:"password"`
 }
 
 // @Summary Create a new user account
@@ -44,6 +49,7 @@ func SignUp(c *gin.Context) {
 	// Create the user
 	user := models.User{
 		Username: body.Username,
+		Role:     body.Role,
 		Password: string(hash),
 	}
 	result := initializers.DB.Create(&user)
@@ -62,12 +68,13 @@ func SignUp(c *gin.Context) {
 // @Tags Authentication
 // @Accept json
 // @Produce json
-// @Param body body CreateUserRequest true "User credentials"
+// @Param body body UserLoginRequest true "User credentials"
 // @Success 200 {string} string "User logged in"
 // @Router /login [post]
 func Login(c *gin.Context) {
 	// Get the email and pass off req body
-	var body CreateUserRequest
+	var body UserLoginRequest
+
 	if c.Bind(&body) != nil {
 		c.JSON(400, gin.H{"error": "Fields to read body"})
 		return

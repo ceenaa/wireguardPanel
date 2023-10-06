@@ -36,7 +36,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/controllers.CreateUserRequest"
+                            "$ref": "#/definitions/controllers.UserLoginRequest"
                         }
                     }
                 ],
@@ -845,6 +845,20 @@ const docTemplate = `{
                 "password": {
                     "type": "string"
                 },
+                "role": {
+                    "type": "string"
+                },
+                "username": {
+                    "type": "string"
+                }
+            }
+        },
+        "controllers.UserLoginRequest": {
+            "type": "object",
+            "properties": {
+                "password": {
+                    "type": "string"
+                },
                 "username": {
                     "type": "string"
                 }
@@ -882,10 +896,14 @@ const docTemplate = `{
         "controllers.systemCreateBody": {
             "type": "object",
             "required": [
-                "name"
+                "name",
+                "publicKey"
             ],
             "properties": {
                 "name": {
+                    "type": "string"
+                },
+                "publicKey": {
                     "type": "string"
                 },
                 "startedDate": {
@@ -983,6 +1001,9 @@ const docTemplate = `{
                     "type": "boolean"
                 },
                 "name": {
+                    "type": "string"
+                },
+                "phone": {
                     "type": "string"
                 },
                 "usage": {
